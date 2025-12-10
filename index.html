@@ -28,7 +28,7 @@
       font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background:
         radial-gradient(circle at top, #fdf3e4 0, #f7f2ea 38%, #f2e7db 100%),
-        url("img/bg-pattern.png") center/320px repeat; /* opsional, jika ada pattern */
+        url("img/bg-pattern.png") center/320px repeat;
       color: var(--text);
       line-height: 1.6;
       scroll-behavior: smooth;
@@ -918,7 +918,7 @@
       margin: 0 auto 1.4rem;
     }
 
-    /* ==== GIFT WRAPPER (RATA TINGGI) ==== */
+    /* GIFT WRAPPER */
     .gift-wrapper {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -938,7 +938,7 @@
       box-shadow: none;
     }
 
-    /* TRANSFER & KADO – bentuk utama sama */
+    /* TRANSFER & KADO – sama bentuk */
     .gift-transfer,
     .gift-physical {
       position: relative;
@@ -1432,7 +1432,7 @@
       text-align: center;
     }
 
-    /* ===== LIGHTBOX / CAROUSEL GALERI ===== */
+    /* LIGHTBOX / CAROUSEL */
     #lightbox {
       position: fixed;
       inset: 0;
@@ -1454,7 +1454,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .lightbox-img-wrapper {
       width: 100%;
       max-height: calc(100vh - 120px);
@@ -1466,14 +1465,12 @@
       overflow: hidden;
       box-shadow: 0 18px 42px rgba(0,0,0,0.6);
     }
-
     .lightbox-img-wrapper img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       display: block;
     }
-
     .lightbox-close {
       position: fixed;
       top: 18px;
@@ -1487,7 +1484,6 @@
       cursor: pointer;
       z-index: 72;
     }
-
     .lightbox-nav {
       position: fixed;
       top: 50%;
@@ -1508,8 +1504,9 @@
     .lightbox-nav.prev { left: 18px; }
     .lightbox-nav.next { right: 18px; }
     .lightbox-nav:hover,
-    .lightbox-close:hover { background: rgba(0,0,0,0.88); }
-
+    .lightbox-close:hover {
+      background: rgba(0,0,0,0.88);
+    }
 
     /* GUESTBOOK */
     .guestbook-wrapper {
@@ -2429,107 +2426,35 @@
         <div class="section-divider"></div>
 
         <div class="gallery-grid">
-          <!-- 1-25, setiap foto dalam figure.gallery-item -->
-          <figure class="gallery-item reveal">
-            <img src="img/foto1.jpeg" alt="foto1">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto2.jpeg" alt="foto2">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto3.jpeg" alt="foto3">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto4.jpeg" alt="foto4">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto5.jpeg" alt="foto5">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto6.jpeg" alt="foto6">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto7.jpeg" alt="foto7">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto8.jpeg" alt="foto8">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto9.jpeg" alt="foto9">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto10.jpeg" alt="foto10">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto11.jpeg" alt="foto11">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto12.jpeg" alt="foto12">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto13.jpeg" alt="foto13">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto14.jpeg" alt="foto14">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto15.jpeg" alt="foto15">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto16.jpeg" alt="foto16">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto17.jpeg" alt="foto17">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto18.jpeg" alt="foto18">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto19.jpeg" alt="foto19">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto20.jpeg" alt="foto20">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto21.jpeg" alt="foto21">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto22.jpeg" alt="foto22">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto23.jpeg" alt="foto23">
-            <figcaption>Our Moment</figcaption>
-          </figure>
-          <figure class="gallery-item reveal">
-            <img src="img/foto24.jpeg" alt="foto24">
-            <figcaption>Our Moment</figcaption>
-          </figure>
+          <!-- 1-25 -->
+          <figure class="gallery-item reveal"><img src="img/foto1.jpeg" alt="foto1"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto2.jpeg" alt="foto2"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto3.jpeg" alt="foto3"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto4.jpeg" alt="foto4"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto5.jpeg" alt="foto5"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto6.jpeg" alt="foto6"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto7.jpeg" alt="foto7"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto8.jpeg" alt="foto8"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto9.jpeg" alt="foto9"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto10.jpeg" alt="foto10"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto11.jpeg" alt="foto11"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto12.jpeg" alt="foto12"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto13.jpeg" alt="foto13"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto14.jpeg" alt="foto14"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto15.jpeg" alt="foto15"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto16.jpeg" alt="foto16"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto17.jpeg" alt="foto17"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto18.jpeg" alt="foto18"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto19.jpeg" alt="foto19"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto20.jpeg" alt="foto20"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto21.jpeg" alt="foto21"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto22.jpeg" alt="foto22"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto23.jpeg" alt="foto23"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto24.jpeg" alt="foto24"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal"><img src="img/foto25.jpeg" alt="foto25"><figcaption>Our Moment</figcaption></figure>
         </div>
       </div>
     </section>
-
 
     <!-- GUESTBOOK -->
     <section id="guestbook" class="section-decor">
@@ -2652,8 +2577,8 @@
   </footer>
 
   <script>
-    const SHEET_SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycby2JWoRnruM3yiTPwaDo_ePKW1P2LwrvpT3K7RGFKK8zxJiKuSpmWz53OYe5pPlxupykQ/exec";
+    // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT
+    const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbza0fNOgZhdf25PJD_oW8yHLtWFub875zEs9N6HG1cZOWPUu68hwZ9IaQELT5CcSKZPXw/exec";
 
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     window.addEventListener("load", () => { window.scrollTo(0, 0); });
@@ -2806,24 +2731,13 @@
       const totalEl = document.getElementById("rsvpSumTotal");
 
       if (!hadirEl) return;
+
       hadirEl.textContent = rsvpSummary.hadir;
       belumEl.textContent = rsvpSummary.belum;
       tidakEl.textContent = rsvpSummary.tidak;
 
       const total = rsvpSummary.hadir + rsvpSummary.belum + rsvpSummary.tidak;
       totalEl.textContent = total;
-    }
-
-    function updateLocalRsvpSummary(status, guestsCount) {
-      const g = parseInt(guestsCount, 10) || 0;
-      if (status === "Insya Allah Hadir") {
-        rsvpSummary.hadir += g;
-      } else if (status === "Maaf Tidak Bisa Hadir") {
-        rsvpSummary.tidak += g;
-      } else {
-        rsvpSummary.belum += g;
-      }
-      renderRsvpSummary();
     }
 
     async function loadRsvpSummaryFromServer() {
@@ -2835,11 +2749,9 @@
         const res = await fetch(SHEET_SCRIPT_URL + "?type=rsvp_stats");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
-        if (typeof data === "object") {
-          rsvpSummary.hadir = parseInt(data.hadir || 0, 10) || 0;
-          rsvpSummary.belum = parseInt(data.belum || 0, 10) || 0;
-          rsvpSummary.tidak = parseInt(data.tidak || 0, 10) || 0;
-        }
+        rsvpSummary.hadir = parseInt(data.hadir || 0, 10) || 0;
+        rsvpSummary.belum = parseInt(data.belum || 0, 10) || 0;
+        rsvpSummary.tidak = parseInt(data.tidak || 0, 10) || 0;
       } catch (err) {
         console.log("Gagal load rekap RSVP dari server:", err);
       }
@@ -2865,7 +2777,7 @@
         ucapan: msg,
       };
 
-      statusMsg.textContent = "Mengirim data RSVP.";
+      statusMsg.textContent = "Mengirim data RSVP...";
       statusMsg.style.color = "#8a6b48";
 
       if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
@@ -2885,7 +2797,8 @@
           statusMsg.style.color = "#1ebe5b";
           document.getElementById("rsvpForm").reset();
           document.getElementById("rsvpGuests").value = "1";
-          updateLocalRsvpSummary(status, guests);
+          // setelah kirim, ambil rekap terbaru dari Spreadsheet
+          loadRsvpSummaryFromServer();
         })
         .catch(() => {
           statusMsg.textContent = "Gagal mengirim RSVP. Silakan coba lagi.";
@@ -3055,11 +2968,9 @@
     const lightboxPrev = document.getElementById("lightboxPrev");
     const lightboxNext = document.getElementById("lightboxNext");
 
-    // ambil semua figure galeri (bukan hanya <img>-nya)
     const galleryItems = Array.from(document.querySelectorAll(".gallery-item"));
     let currentIndex = 0;
 
-    // ambil src gambar dari setiap item
     const gallerySources = galleryItems.map(item => {
       const img = item.querySelector("img");
       return {
@@ -3070,11 +2981,8 @@
 
     function updateLightboxImage(index) {
       if (!gallerySources.length) return;
-
-      // modul untuk loop (carousel)
       const safeIndex = (index + gallerySources.length) % gallerySources.length;
       currentIndex = safeIndex;
-
       const item = gallerySources[safeIndex];
       lightboxImg.src = item.src;
       lightboxImg.alt = item.alt;
@@ -3083,7 +2991,6 @@
     function openLightbox(index) {
       updateLightboxImage(index);
       lightbox.classList.add("open");
-      // kunci scroll background
       document.body.classList.add("locked");
     }
 
@@ -3094,7 +3001,6 @@
       document.body.classList.add("unlocked");
     }
 
-    // klik pada item galeri (figure) → buka lightbox
     galleryItems.forEach((item, index) => {
       item.dataset.index = index;
       item.addEventListener("click", () => {
@@ -3102,39 +3008,30 @@
       });
     });
 
-    // tombol prev/next
     lightboxPrev.addEventListener("click", (e) => {
       e.stopPropagation();
       updateLightboxImage(currentIndex - 1);
     });
-
     lightboxNext.addEventListener("click", (e) => {
       e.stopPropagation();
       updateLightboxImage(currentIndex + 1);
     });
-
-    // tombol close
     lightboxClose.addEventListener("click", (e) => {
       e.stopPropagation();
       closeLightbox();
     });
 
-    // klik area luar foto = close
     lightbox.addEventListener("click", (e) => {
       const clickedInsideImage = e.target.closest(".lightbox-img-wrapper");
       const clickedNav = e.target.closest(".lightbox-nav");
       const clickedClose = e.target.closest(".lightbox-close");
-
-      // kalau klik bukan di gambar, bukan di arrow, bukan di tombol close → tutup
       if (!clickedInsideImage && !clickedNav && !clickedClose) {
         closeLightbox();
       }
     });
 
-    // keyboard: Esc untuk close, ⇦ & ⇨ untuk prev/next
     document.addEventListener("keydown", (e) => {
       if (!lightbox.classList.contains("open")) return;
-
       if (e.key === "Escape") {
         closeLightbox();
       } else if (e.key === "ArrowLeft") {
@@ -3143,7 +3040,6 @@
         updateLightboxImage(currentIndex + 1);
       }
     });
-
   </script>
 </body>
 </html>
