@@ -92,6 +92,7 @@
       color: #8d6e4f;
       margin-bottom: 0.3rem;
       position: relative;
+      text-shadow: 0 2px 6px rgba(255,255,255,0.6);
     }
     .section-title::before,
     .section-title::after {
@@ -495,6 +496,7 @@
       border: 4px solid rgba(255,255,255,0.8);
       box-shadow: 0 24px 60px rgba(0,0,0,0.75);
       position: relative;
+      animation: float 6s ease-in-out infinite;
     }
     .hero-photo-main::after {
       content: "";
@@ -516,6 +518,11 @@
         border-radius: 32px;
       }
     }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
     .hero-mini-row {
       display: flex;
       gap: 0.7rem;
@@ -722,85 +729,302 @@
     }
     .person-ig span.icon { font-size: 1rem; }
 
-    /* LOVE STORY */
-    .story-card {
-      background: var(--card-bg);
-      border-radius: var(--radius-xl);
-      padding: 1.8rem 1.5rem 1.6rem;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(196,154,108,0.22);
+    /* ============= LOVE STORY CAROUSEL – 3D CARD STACK ============= */
+    .story-carousel-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
       position: relative;
-      overflow: hidden;
+      padding: 0.4rem 0 0.2rem;
     }
-    .story-card::before {
+
+    .story-carousel-shell {
+      background: linear-gradient(135deg, rgba(255,255,255,0.99), rgba(255,248,238,0.98));
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(196,154,108,0.3);
+      box-shadow: var(--shadow-soft);
+      padding: 1.5rem 1.3rem 1.6rem;
+      position: relative;
+      overflow: visible;
+    }
+
+    .story-carousel-shell::before,
+    .story-carousel-shell::after {
       content: "";
       position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at top left, rgba(243,214,179,0.3), transparent 55%);
-      opacity: 0.7;
+      border-radius: 50%;
+      border: 1px dashed rgba(196,154,108,0.35);
+      opacity: 0.45;
       pointer-events: none;
     }
-    .story-card-inner {
-      position: relative;
-      z-index: 1;
-      font-size: 0.9rem;
-      color: #5a4634;
+    .story-carousel-shell::before {
+      width: 150px;
+      height: 150px;
+      top: -70px;
+      right: -40px;
     }
-    .story-timeline {
-      position: relative;
-      margin-top: 0.4rem;
+    .story-carousel-shell::after {
+      width: 210px;
+      height: 210px;
+      bottom: -110px;
+      left: -60px;
     }
-    .story-timeline::before {
-      content: "";
-      position: absolute;
-      left: 15px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, rgba(196,154,108,0.5), transparent);
-    }
-    .story-block {
-      position: relative;
-      padding-left: 2.4rem;
-      padding-bottom: 1.1rem;
-    }
-    .story-block:last-child { padding-bottom: 0; }
-    .story-block + .story-block { margin-top: 0.4rem; }
-    .story-badge {
-      position: absolute;
-      left: 4px;
-      top: 2px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #c49a6c;
-      color: #fff;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-    }
-    .story-step-label {
-      font-size: 0.76rem;
+
+    .story-intro-label {
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
       color: #b28655;
-      margin-bottom: 0.12rem;
+      margin-bottom: 0.3rem;
+    }
+    .story-intro-title {
+      font-family: "Cinzel", serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #4a331f;
+      margin-bottom: 0.6rem;
+    }
+    .story-intro-text {
+      font-size: 0.88rem;
+      color: #5a4634;
+      margin-bottom: 0.9rem;
+    }
+
+    .story-track {
+      position: relative;
+      padding: 1rem 0.75rem 1.6rem;
+      min-height: 340px;
+      perspective: 1400px;
+    }
+
+    /* dua layer belakang – hanya bayangan kosong */
+    .story-depth-layer {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: 720px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.06);
+      transform-origin: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .story-depth-layer.back-1 {
+      transform: translateY(14px) scale(0.97) rotateX(5deg);
+      opacity: 0.85;
+    }
+    .story-depth-layer.back-2 {
+      transform: translateY(26px) scale(0.94) rotateX(9deg);
+      opacity: 0.65;
+    }
+
+    /* slide utama – hanya 1 yang aktif (display:grid) */
+    .story-slide {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: 720px;
+      height: 100%;                      /* PENTING */
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 1.25rem 1.3rem;
+      box-shadow: 0 22px 42px rgba(0,0,0,0.12);
+      display: none;
+      grid-template-columns: 38% 62%;
+      gap: 1.1rem;
+      align-items: stretch;              /* PENTING */
+      overflow: hidden;                  /* 🔒 KUNCI CARD */
+      z-index: 2;
+    }
+
+    .story-slide.active {
+      display: grid;
+      /* opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1); */
+    }
+
+    @media (max-width: 820px) {
+      .story-track {
+        min-height: 420px;
+      }
+      .story-slide {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .story-photo-frame {
+        max-height: 220px;
+      }
+
+      .story-text {
+        max-height: 200px;
+      }
+      
+      .story-depth-layer {
+        max-width: 100%;
+      }
+      .story-slide {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.9rem;
+        padding: 1.15rem 1.1rem 1.3rem;
+      }
+    }
+
+    /* === FOTO === */
+    .story-photo-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;                      /* mengikuti card */
+      max-height: 260px;
+      border-radius: 20px;
+      overflow: hidden;                  /* 🔒 */
+      background: #000;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+    }
+    .story-photo-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(0,0,0,0.18), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .story-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      /* transform: scale(1.03);
+      transition: transform 0.6s ease; */
+    }
+    .story-slide.active .story-photo-frame img {
+      transform: scale(1);
+    }
+    .story-photo-tag {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.72rem;
+      border-radius: 999px;
+    }
+
+    /* === TEKS === */
+    .story-text-block {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;                  /* 🔒 */
+    }
+
+    /* judul */
+    .story-step-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #b28655;
     }
     .story-title {
       font-family: "Cinzel", serif;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 600;
       color: #4a331f;
-      margin-bottom: 0.18rem;
+      margin-bottom: 0.3rem;
     }
+
+    /* konten teks – SCROLL INTERNAL */
     .story-text {
       font-size: 0.9rem;
       color: #5a4634;
+      line-height: 1.65;
+      overflow-y: auto;                  /* ✅ scroll dalam card */
+      padding-right: 6px;
     }
-    .story-text span.icon { margin-right: 0.2rem; }
+    .story-text span.icon {
+      margin-right: 0.22rem;
+    }
+
+    /* scrollbar halus */
+    .story-text::-webkit-scrollbar {
+      width: 4px;
+    }
+    .story-text::-webkit-scrollbar-thumb {
+      background: rgba(196,154,108,0.4);
+      border-radius: 999px;
+    }
+
+    .story-step-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.76rem;
+      border-radius: 999px;
+      padding: 0.26rem 0.65rem;
+      background: rgba(196,154,108,0.1);
+      color: #b28655;
+      margin-bottom: 0.4rem;
+    }
+
+    /* tombol next / prev */
+    .story-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+    }
+    .story-nav:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    .story-nav.prev { left: 8px; }
+    .story-nav.next { right: 8px; }
+    @media (max-width: 640px) {
+      .story-nav.prev { left: 4px; }
+      .story-nav.next { right: 4px; }
+    }
+
+    /* dots bawah */
+    .story-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.32rem;
+      margin-top: 0.9rem;
+    }
+    .story-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(196,154,108,0.3);
+      cursor: pointer;
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+    .story-dot.active {
+      width: 18px;
+      background: #c49a6c;
+    }
+    .story-text::after {
+      content: "";
+      position: sticky;
+      bottom: 0;
+      height: 24px;
+      display: block;
+      background: linear-gradient(transparent, #fff);
+    }
+
 
     /* EVENT */
     .events-wrapper {
@@ -875,6 +1099,27 @@
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 0 9px 18px rgba(0,0,0,0.12);
+    }
+
+    .event-link-secondary {
+      margin-left: 0.35rem;
+      background: #ffffff;
+      color: #8a653b;
+      border: 1px solid rgba(196,154,108,0.7);
+      box-shadow: 0 9px 18px rgba(0,0,0,0.08);
+    }
+
+    @media (max-width: 520px) {
+      .event-link,
+      .event-link-secondary {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 0.45rem;
+      }
+      .event-link-secondary {
+        margin-left: 0;
+      }
     }
 
     /* Generic card */
@@ -970,7 +1215,6 @@
       height: 100%;
     }
 
-    /* TRANSFER DETAIL */
     .gift-transfer-header {
       display: flex;
       align-items: center;
@@ -1097,7 +1341,6 @@
       color: #8a6b48;
     }
 
-    /* KADO FISIK DETAIL */
     .gift-physical-header {
       display: flex;
       align-items: center;
@@ -1972,85 +2215,164 @@
       </div>
     </section>
 
-    <!-- LOVE STORY -->
+    <!-- LOVE STORY – 3D CARD CAROUSEL -->
     <section id="story" class="section-decor">
       <div class="container">
         <h2 class="section-title">Love Story</h2>
         <p class="section-subtitle">Perjalanan Kami</p>
         <div class="section-divider"></div>
 
-        <div class="story-card reveal">
-          <div class="story-card-inner">
-            <div class="story-timeline">
-              <!-- Awal Mula -->
-              <div class="story-block">
-                <div class="story-badge">01</div>
-                <div class="story-step-label">Awal Mula</div>
-                <div class="story-title">Empat Tahun yang Terlewat</div>
-                <p class="story-text">
-                  <span class="icon">✨</span>
-                  Empat tahun berkuliah di perguruan tinggi yang sama, namun kami tak pernah saling
-                  mengenal dan bertegur sapa. Waktu seolah hanya mempertemukan kami sebagai dua orang
-                  asing yang berjalan berdampingan tanpa disadari.
-                </p>
-              </div>
+        <div class="story-carousel-wrapper reveal">
+          <div class="story-carousel-shell">
+            <div class="story-intro-label">Kisah Singkat</div>
+            <div class="story-intro-title">Perjalanan yang Allah Rangkai dengan Indah</div>
+            <p class="story-intro-text">
+              Setiap pertemuan memiliki waktu, setiap perjalanan memiliki cerita.
+              Inilah rangkaian kisah kami dari awal mula hingga akhirnya mantap
+              melangkah menuju akad dan kehidupan baru bersama.
+            </p>
 
-              <!-- Pertemuan -->
-              <div class="story-block">
-                <div class="story-badge">02</div>
-                <div class="story-step-label">Pertemuan</div>
-                <div class="story-title">Dipertemukan Kembali</div>
-                <p class="story-text">
-                  <span class="icon">✨</span>
-                  Siapa sangka, semesta punya caranya sendiri dalam mempertemukan kami.
-                  Ditempatkan di kantor yang sama, namun awalnya hanya sebagai teman biasa.
-                  Tak pernah menyangka bahwa akan ada sesuatu yang istimewa di antara kami.
-                </p>
-              </div>
+            <button class="story-nav prev" id="storyPrev">‹</button>
+            <button class="story-nav next" id="storyNext">›</button>
 
-              <!-- Perjalanan Kasih -->
-              <div class="story-block">
-                <div class="story-badge">03</div>
-                <div class="story-step-label">Perjalanan Kasih</div>
-                <div class="story-title">Dari Teman Menjadi Teman Hidup</div>
-                <p class="story-text">
-                  <span class="icon">✨</span>
-                  Seiring berjalannya waktu, kami saling mengenal satu sama lain. Obrolan yang
-                  awalnya hanya sebatas pekerjaan, perlahan berubah menjadi percakapan yang lebih hangat.
-                  Dari percakapan kecil, kebersamaan sederhana, kami mulai menemukan kenyamanan
-                  yang tidak pernah kami rencanakan. Hingga akhirnya, Fadil mengungkapkan isi hatinya
-                  dan cerita kami dimulai. Perjalanan yang tak selalu mulus, namun kami selalu kembali
-                  memilih satu sama lain.
-                </p>
-              </div>
+            <div class="story-track">
+              <!-- dua kartu bayangan di belakang -->
+              <div class="story-depth-layer back-2"></div>
+              <div class="story-depth-layer back-1"></div>
 
-              <!-- Momen Lamaran -->
-              <div class="story-block">
-                <div class="story-badge">04</div>
-                <div class="story-step-label">Momen Lamaran</div>
-                <div class="story-title">Janji yang Diteguhkan</div>
-                <p class="story-text">
-                  <span class="icon">✨</span>
-                  Dengan ketulusan dan keseriusannya, Fadil membawa kedua orang tuanya untuk melamar Nisa
-                  dan melangkah ke jenjang yang lebih serius. Hari itu, kami saling berjanji dan siap menuju
-                  babak baru dalam kisah cinta kami.
-                </p>
-              </div>
+              <!-- Slide 1 -->
+              <article class="story-slide active" data-index="0">
+                <div class="story-photo-frame">
+                  <img src="img/foto1.jpeg" alt="Awal Mula - Masa Kuliah" />
+                  <div class="story-photo-tag">
+                    <span>01</span><span>Awal Mula</span>
+                  </div>
+                </div>
+                <div class="story-text-block">
+                  <div class="story-step-pill">
+                    <span>📖</span><span>Awal Mula</span>
+                  </div>
+                  <div class="story-step-label">Empat Tahun yang Terlewat</div>
+                  <div class="story-title">Dua Orang Asing di Kampus yang Sama</div>
+                  <p class="story-text">
+                    <span class="icon">✨</span>
+                    Empat tahun berkuliah di perguruan tinggi yang sama, namun kami tak pernah saling
+                    mengenal dan bertegur sapa. Waktu seolah hanya mempertemukan kami sebagai dua orang
+                    asing yang berjalan berdampingan tanpa disadari. Di tengah keramaian kelas, tugas,
+                    dan hiruk pikuk dunia kampus, kami tetap menjadi dua nama yang tak saling bersua.
+                  </p>
+                </div>
+              </article>
 
-              <!-- Menuju Hari Bahagia -->
-              <div class="story-block">
-                <div class="story-badge">05</div>
-                <div class="story-step-label">Menuju Hari Bahagia</div>
-                <div class="story-title">Dua Tahun yang Bermakna</div>
-                <p class="story-text">
-                  <span class="icon">✨</span>
-                  Kini, setelah 2 tahun menjalani kisah bersama, kami melangkah menuju hari istimewa
-                  dengan penuh rasa syukur. Hari ketika dua hati akan dipersatukan dalam ikatan yang suci.
-                  Semoga cinta yang menyatukan kami selalu tumbuh, menguat, dan menjadi berkah dalam setiap
-                  langkah kehidupan ke depannya.
-                </p>
-              </div>
+              <!-- Slide 2 -->
+              <article class="story-slide" data-index="1">
+                <div class="story-photo-frame">
+                  <img src="img/foto5.jpeg" alt="Pertemuan di Kantor" />
+                  <div class="story-photo-tag">
+                    <span>02</span><span>Pertemuan</span>
+                  </div>
+                </div>
+                <div class="story-text-block">
+                  <div class="story-step-pill">
+                    <span>🌱</span><span>Pertemuan</span>
+                  </div>
+                  <div class="story-step-label">Dipertemukan Kembali</div>
+                  <div class="story-title">Dari Rekan Kerja Menjadi Lebih Berarti</div>
+                  <p class="story-text">
+                    <span class="icon">✨</span>
+                    Siapa sangka, semesta punya caranya sendiri dalam mempertemukan kami.
+                    Ditempatkan di kantor yang sama, kami memulai hari-hari sebagai rekan kerja biasa.
+                    Tidak ada yang terasa istimewa di awal—hanya sapaan, tawa ringan, dan obrolan
+                    seperlunya. Namun, pelan-pelan kami sadar bahwa di balik rutinitas, ada takdir
+                    yang sedang Allah susun dengan rapi.
+                  </p>
+                </div>
+              </article>
+
+              <!-- Slide 3 -->
+              <article class="story-slide" data-index="2">
+                <div class="story-photo-frame">
+                  <img src="img/foto8.jpeg" alt="Perjalanan Kasih" />
+                  <div class="story-photo-tag">
+                    <span>03</span><span>Perjalanan Kasih</span>
+                  </div>
+                </div>
+                <div class="story-text-block">
+                  <div class="story-step-pill">
+                    <span>💞</span><span>Perjalanan Kasih</span>
+                  </div>
+                  <div class="story-step-label">Dari Teman Menjadi Teman Hidup</div>
+                  <div class="story-title">Nyaman yang Tak Pernah Direncanakan</div>
+                  <p class="story-text">
+                    <span class="icon">✨</span>
+                    Seiring berjalannya waktu, kami mulai saling mengenal lebih dekat.
+                    Obrolan yang awalnya hanya sebatas pekerjaan, perlahan berubah menjadi percakapan
+                    yang lebih hangat. Dari candaan ringan, cerita lelah setelah pulang kerja, hingga
+                    nasihat kecil yang menenangkan. Dari percakapan kecil dan kebersamaan sederhana,
+                    kami menemukan kenyamanan yang sebelumnya tak pernah kami rencanakan.
+                    Hingga akhirnya, Fadil mengungkapkan isi hatinya dan cerita kami pun dimulai.
+                  </p>
+                </div>
+              </article>
+
+              <!-- Slide 4 -->
+              <article class="story-slide" data-index="3">
+                <div class="story-photo-frame">
+                  <img src="img/foto12.jpeg" alt="Momen Lamaran" />
+                  <div class="story-photo-tag">
+                    <span>04</span><span>Lamaran</span>
+                  </div>
+                </div>
+                <div class="story-text-block">
+                  <div class="story-step-pill">
+                    <span>💍</span><span>Momen Lamaran</span>
+                  </div>
+                  <div class="story-step-label">Janji yang Diteguhkan</div>
+                  <div class="story-title">Melangkah Lebih Serius</div>
+                  <p class="story-text">
+                    <span class="icon">✨</span>
+                    Dengan ketulusan dan keseriusannya, Fadil membawa kedua orang tuanya untuk
+                    melamar Nisa. Di hadapan keluarga, kami saling mengucap niat dan tekad untuk
+                    melangkah ke jenjang yang lebih serius. Hari itu bukan sekadar pertemuan dua
+                    keluarga, tetapi awal dari janji untuk saling menjaga, menguatkan, dan tumbuh
+                    bersama dalam kebaikan.
+                  </p>
+                </div>
+              </article>
+
+              <!-- Slide 5 -->
+              <article class="story-slide" data-index="4">
+                <div class="story-photo-frame">
+                  <img src="img/foto18.jpeg" alt="Menuju Hari Bahagia" />
+                  <div class="story-photo-tag">
+                    <span>05</span><span>Hari Bahagia</span>
+                  </div>
+                </div>
+                <div class="story-text-block">
+                  <div class="story-step-pill">
+                    <span>🤍</span><span>Menuju Hari Bahagia</span>
+                  </div>
+                  <div class="story-step-label">Dua Tahun yang Bermakna</div>
+                  <div class="story-title">Menjemput Ridha dan Doa</div>
+                  <p class="story-text">
+                    <span class="icon">✨</span>
+                    Kini, setelah 2 tahun menjalani kisah bersama, kami melangkah menuju hari
+                    istimewa dengan penuh rasa syukur. Hari ketika dua hati dipersatukan dalam
+                    ikatan yang suci. Semoga cinta yang menyatukan kami selalu tumbuh, menguat,
+                    dan menjadi berkah dalam setiap langkah kehidupan ke depannya, serta menjadi
+                    jalan menuju ridha Allah dan keluarga sakinah, mawaddah, warahmah.
+                  </p>
+                </div>
+              </article>
             </div>
+          </div>
+
+          <div class="story-dots">
+            <button class="story-dot active" data-slide="0"></button>
+            <button class="story-dot" data-slide="1"></button>
+            <button class="story-dot" data-slide="2"></button>
+            <button class="story-dot" data-slide="3"></button>
+            <button class="story-dot" data-slide="4"></button>
           </div>
         </div>
       </div>
@@ -2093,6 +2415,12 @@
                  rel="noopener noreferrer">
                 <span class="icon">🗺️</span><span>Buka di Maps</span>
               </a>
+              <a class="event-link event-link-secondary"
+                 href="https://www.google.com/calendar/render?action=TEMPLATE&text=Akad+Pernikahan+Nisa+%26+Fadil&dates=20251228T003000Z/20251228T020000Z&details=Akad+nikah+Nisa+%26+Fadil+di+Gedung+Sepintu+Sedulang&location=Gedung+Sepintu+Sedulang,+Sungailiat,+Bangka+Belitung"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                <span class="icon">➕</span><span>Simpan ke Kalender</span>
+              </a>
             </div>
           </div>
 
@@ -2125,6 +2453,12 @@
                  target="_blank"
                  rel="noopener noreferrer">
                 <span class="icon">🗺️</span><span>Buka di Maps</span>
+              </a>
+              <a class="event-link event-link-secondary"
+                 href="https://www.google.com/calendar/render?action=TEMPLATE&text=Resepsi+Pernikahan+Nisa+%26+Fadil&dates=20251228T030000Z/20251228T060000Z&details=Resepsi+pernikahan+Nisa+%26+Fadil+di+Gedung+Sepintu+Sedulang&location=Gedung+Sepintu+Sedulang,+Sungailiat,+Bangka+Belitung"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                <span class="icon">➕</span><span>Simpan ke Kalender</span>
               </a>
             </div>
           </div>
@@ -2178,11 +2512,11 @@
                   </div>
                 </div>
 
-                <!-- <p class="gift-transfer-text">
+                <p class="gift-transfer-text">
                   Jika berkenan memberikan hadiah dalam bentuk transfer, Bapak/Ibu/Saudara/i
                   dapat mengirimkannya ke rekening berikut. Setiap kebaikan yang diberikan,
                   insya Allah menjadi doa dan keberkahan untuk kita semua.
-                </p> -->
+                </p>
 
                 <div class="gift-transfer-badge-row">
                   <div class="gift-transfer-badge">
@@ -2249,7 +2583,7 @@
                     kami dengan senang hati menerimanya melalui alamat berikut.
                   </p>
 
-                  <!-- <ul class="gift-steps">
+                  <ul class="gift-steps">
                     <li class="gift-step-item">
                       <div class="gift-step-badge">1</div>
                       <div class="gift-step-text">
@@ -2271,7 +2605,7 @@
                         menyampaikan ucapan terima kasih secara khusus.
                       </div>
                     </li>
-                  </ul> -->
+                  </ul>
 
                   <div class="gift-physical-address" id="alamat-kado">
                     <strong>Penerima:</strong> Fahrunnisa Maharani<br />
@@ -2577,22 +2911,30 @@
   </footer>
 
   <script>
-    // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT
-    const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbza0fNOgZhdf25PJD_oW8yHLtWFub875zEs9N6HG1cZOWPUu68hwZ9IaQELT5CcSKZPXw/exec";
+    // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT MU
+    const SHEET_SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbza0fNOgZhdf25PJD_oW8yHLtWFub875zEs9N6HG1cZOWPUu68hwZ9IaQELT5CcSKZPXw/exec";
 
+    // Matikan auto scroll restore
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    window.addEventListener("load", () => { window.scrollTo(0, 0); });
+    window.addEventListener("load", () => {
+      window.scrollTo(0, 0);
+    });
 
+    // ==== Helper query param ====
     function getQueryParam(key) {
       const params = new URLSearchParams(window.location.search);
       return params.get(key) || "";
     }
+
+    // Isi nama tamu di cover dari ?to=
     (function fillGuestName() {
       const name = getQueryParam("to");
       const el = document.getElementById("guestNameCover");
       if (el) el.textContent = name ? name : "Bapak/Ibu/Saudara/i";
     })();
 
+    // ==== COVER & MUSIK ====
     const cover = document.getElementById("cover");
     const btnOpenCover = document.getElementById("btnOpenCover");
     const bgm = document.getElementById("bgm");
@@ -2607,46 +2949,59 @@
 
       if (bgm && !bgmStarted) {
         bgm.volume = 0.8;
-        bgm.play().then(() => {
-          bgmStarted = true;
-          fabMusicLabel.textContent = "Musik Menyala";
-        }).catch(() => {});
+        bgm
+          .play()
+          .then(() => {
+            bgmStarted = true;
+            fabMusicLabel.textContent = "Musik Menyala";
+          })
+          .catch(() => {});
       }
     });
 
+    // ==== NAVBAR & FAB ====
     const navToggle = document.getElementById("navToggle");
     const navLinks = document.getElementById("navLinks");
     navToggle.addEventListener("click", () => {
       navLinks.classList.toggle("open");
     });
-    document.querySelectorAll(".nav-links button[data-scroll]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const target = btn.getAttribute("data-scroll");
-        const el = document.querySelector(target);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-        if (window.innerWidth <= 768) navLinks.classList.remove("open");
+
+    document
+      .querySelectorAll(".nav-links button[data-scroll]")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-scroll");
+          const el = document.querySelector(target);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+          if (window.innerWidth <= 768) navLinks.classList.remove("open");
+        });
       });
-    });
 
     document.getElementById("fabRSVP").addEventListener("click", () => {
       document.getElementById("rsvp").scrollIntoView({ behavior: "smooth" });
     });
+
     document.getElementById("fabMusic").addEventListener("click", () => {
       if (!bgm) return;
       if (bgm.paused) {
-        bgm.play().then(() => {
-          bgmStarted = true;
-          fabMusicLabel.textContent = "Musik Menyala";
-        }).catch(() => {});
+        bgm
+          .play()
+          .then(() => {
+            bgmStarted = true;
+            fabMusicLabel.textContent = "Musik Menyala";
+          })
+          .catch(() => {});
       } else {
         bgm.pause();
         fabMusicLabel.textContent = "Musik Dimatikan";
       }
     });
+
     document.getElementById("backToTop").addEventListener("click", () => {
       document.getElementById("hero").scrollIntoView({ behavior: "smooth" });
     });
 
+    // ==== REVEAL ANIMATION ====
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -2661,9 +3016,12 @@
       );
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     } else {
-      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("show"));
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => el.classList.add("show"));
     }
 
+    // ==== COUNTDOWN ====
     (function initCountdown() {
       const targetDate = new Date("2025-12-28T07:30:00+07:00");
       const daysEl = document.getElementById("cd-days");
@@ -2693,10 +3051,12 @@
         minutesEl.textContent = String(minutes).padStart(2, "0");
         secondsEl.textContent = String(seconds).padStart(2, "0");
       }
+
       updateCountdown();
       const timer = setInterval(updateCountdown, 1000);
     })();
 
+    // ==== SALIN TEKS (REK / ALAMAT) ====
     document.querySelectorAll(".copy-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const targetId = btn.getAttribute("data-copy-target");
@@ -2704,7 +3064,7 @@
         if (!targetEl) return;
 
         const text = targetEl.innerText || targetEl.textContent || "";
-        if (navigator.clipboard) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text);
         } else {
           const temp = document.createElement("textarea");
@@ -2717,11 +3077,71 @@
 
         const original = btn.innerHTML;
         btn.innerHTML = "✅ Tersalin";
-        setTimeout(() => { btn.innerHTML = original; }, 1500);
+        setTimeout(() => {
+          btn.innerHTML = original;
+        }, 1500);
       });
     });
 
-    /* ================== RSVP & REKAP ================== */
+    // =========================================
+    //           LOVE STORY CAROUSEL
+    // =========================================
+    (function initStoryCarousel() {
+      const slides = Array.from(document.querySelectorAll(".story-slide"));
+      const dots = Array.from(document.querySelectorAll(".story-dot"));
+      const btnPrev = document.getElementById("storyPrev");
+      const btnNext = document.getElementById("storyNext");
+      if (!slides.length) return;
+
+      let currentIndex = 0;
+
+      function showSlide(index) {
+        const total = slides.length;
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+        currentIndex = index;
+
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === currentIndex);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === currentIndex);
+        });
+      }
+
+      btnPrev.addEventListener("click", () => {
+        showSlide(currentIndex - 1);
+        resetAuto();
+      });
+      btnNext.addEventListener("click", () => {
+        showSlide(currentIndex + 1);
+        resetAuto();
+      });
+      dots.forEach((dot, i) => {
+        dot.addEventListener("click", () => {
+          showSlide(i);
+          resetAuto();
+        });
+      });
+
+      // Auto slide
+      let autoTimer = setInterval(() => {
+        showSlide(currentIndex + 1);
+      }, 9000);
+
+      function resetAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => {
+          showSlide(currentIndex + 1);
+        }, 9000);
+      }
+
+      showSlide(0);
+    })();
+
+    // =========================================
+    //              RSVP + REKAP
+    // =========================================
     const rsvpSummary = { hadir: 0, belum: 0, tidak: 0 };
 
     function renderRsvpSummary() {
@@ -2729,19 +3149,20 @@
       const belumEl = document.getElementById("rsvpSumBelum");
       const tidakEl = document.getElementById("rsvpSumTidak");
       const totalEl = document.getElementById("rsvpSumTotal");
-
       if (!hadirEl) return;
 
       hadirEl.textContent = rsvpSummary.hadir;
       belumEl.textContent = rsvpSummary.belum;
       tidakEl.textContent = rsvpSummary.tidak;
-
       const total = rsvpSummary.hadir + rsvpSummary.belum + rsvpSummary.tidak;
       totalEl.textContent = total;
     }
 
     async function loadRsvpSummaryFromServer() {
-      if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
+      if (
+        !SHEET_SCRIPT_URL ||
+        SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1
+      ) {
         renderRsvpSummary();
         return;
       }
@@ -2758,288 +3179,386 @@
       renderRsvpSummary();
     }
 
-    document.getElementById("rsvpForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = document.getElementById("rsvpName").value.trim();
-      const phone = document.getElementById("rsvpPhone").value.trim();
-      const status = document.getElementById("rsvpStatus").value;
-      const guests = document.getElementById("rsvpGuests").value || "1";
-      const msg = document.getElementById("rsvpMessage").value.trim();
-      const statusMsg = document.getElementById("rsvpStatusMsg");
-      if (!name) return;
+    document
+      .getElementById("rsvpForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        const name = document.getElementById("rsvpName").value.trim();
+        const phone = document.getElementById("rsvpPhone").value.trim();
+        const status = document.getElementById("rsvpStatus").value;
+        const guests = document.getElementById("rsvpGuests").value || "1";
+        const msg = document.getElementById("rsvpMessage").value.trim();
+        const statusMsg = document.getElementById("rsvpStatusMsg");
 
-      const payload = {
-        type: "rsvp",
-        nama: name,
-        whatsapp: phone,
-        status: status,
-        jumlah: guests,
-        ucapan: msg,
-      };
+        if (!name) return;
 
-      statusMsg.textContent = "Mengirim data RSVP...";
-      statusMsg.style.color = "#8a6b48";
-
-      if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
-        statusMsg.textContent = "URL Apps Script belum diisi. Mohon hubungi admin.";
-        statusMsg.style.color = "red";
-        return;
-      }
-
-      fetch(SHEET_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-        .then(() => {
-          statusMsg.textContent = "Alhamdulillah, RSVP berhasil dikirim.";
-          statusMsg.style.color = "#1ebe5b";
-          document.getElementById("rsvpForm").reset();
-          document.getElementById("rsvpGuests").value = "1";
-          // setelah kirim, ambil rekap terbaru dari Spreadsheet
-          loadRsvpSummaryFromServer();
-        })
-        .catch(() => {
-          statusMsg.textContent = "Gagal mengirim RSVP. Silakan coba lagi.";
-          statusMsg.style.color = "red";
-        });
-    });
-
-    /* ================== GUESTBOOK ================== */
-    const guestListEl = document.getElementById("guestList");
-    let guestEntries = [];
-
-    function renderGuestbook() {
-      guestListEl.innerHTML = "";
-      if (!guestEntries.length) {
-        const empty = document.createElement("div");
-        empty.className = "guest-empty";
-        empty.textContent =
-          "Belum ada ucapan yang ditampilkan. Jadilah yang pertama memberikan doa terbaik.";
-        guestListEl.appendChild(empty);
-        return;
-      }
-
-      guestEntries.slice().reverse().forEach((entry) => {
-        const card = document.createElement("div");
-        card.className = "guest-card";
-
-        const header = document.createElement("div");
-        header.className = "guest-card-header";
-
-        const avatar = document.createElement("div");
-        avatar.className = "guest-avatar";
-        avatar.textContent = "💌";
-
-        const metaWrap = document.createElement("div");
-        metaWrap.className = "guest-card-meta-wrap";
-
-        const nameEl = document.createElement("div");
-        nameEl.className = "guest-card-name";
-        nameEl.textContent = entry.name;
-
-        const metaEl = document.createElement("div");
-        metaEl.className = "guest-card-meta";
-        const rel = entry.relation ? " • " + entry.relation : "";
-        metaEl.textContent = entry.time + rel;
-
-        metaWrap.appendChild(nameEl);
-        metaWrap.appendChild(metaEl);
-
-        header.appendChild(avatar);
-        header.appendChild(metaWrap);
-
-        const msgEl = document.createElement("div");
-        msgEl.className = "guest-quote";
-        msgEl.textContent = entry.message;
-
-        card.appendChild(header);
-        card.appendChild(msgEl);
-        guestListEl.appendChild(card);
-      });
-    }
-
-    async function loadGuestbookFromServer() {
-      if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
-        renderGuestbook();
-        return;
-      }
-      try {
-        const res = await fetch(SHEET_SCRIPT_URL + "?type=guestbook");
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json();
-        if (Array.isArray(data.entries)) {
-          guestEntries = data.entries.map((e) => ({
-            name: e.nama || "Tamu",
-            relation: e.hubungan || "",
-            message: e.ucapan || "",
-            time: e.tanggal || "",
-          }));
-        }
-      } catch (err) {
-        console.log("Gagal load ucapan dari server:", err);
-      }
-      renderGuestbook();
-    }
-
-    renderGuestbook();
-    loadGuestbookFromServer();
-    loadRsvpSummaryFromServer();
-
-    document.getElementById("guestForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = document.getElementById("guestName").value.trim();
-      const relation = document.getElementById("guestRelation").value.trim();
-      const message = document.getElementById("guestMessage").value.trim();
-      if (!name || !message) return;
-
-      const now = new Date();
-      const options = { day: "numeric", month: "short", year: "numeric" };
-      const timeStr = now.toLocaleDateString("id-ID", options);
-
-      guestEntries.push({ name, relation, message, time: timeStr });
-      document.getElementById("guestName").value = "";
-      document.getElementById("guestRelation").value = "";
-      document.getElementById("guestMessage").value = "";
-      renderGuestbook();
-
-      if (SHEET_SCRIPT_URL && SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") === -1) {
-        const guestPayload = {
-          type: "guestbook",
+        const payload = {
+          type: "rsvp",
           nama: name,
-          hubungan: relation,
-          ucapan: message,
-          tanggal: timeStr,
+          whatsapp: phone,
+          status: status,
+          jumlah: guests,
+          ucapan: msg,
         };
 
-        fetch(SHEET_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(guestPayload),
-        }).catch(() => {});
-      }
-    });
+        statusMsg.textContent = "Mengirim data...";
+        statusMsg.style.color = "#8a6b48";
 
-    /* ================== SHARE ================== */
-    const currentUrl = window.location.href;
-    document.getElementById("btnCopyLink").addEventListener("click", () => {
-      const text = currentUrl;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text);
-      } else {
-        const temp = document.createElement("textarea");
-        temp.value = text;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-      }
-      alert("Link undangan berhasil disalin.");
-    });
-    document.getElementById("btnShareWA").addEventListener("click", () => {
-      const text =
-        "Assalamu'alaikum, berikut undangan pernikahan Nisa & Fadil yang akan dilaksanakan pada Minggu, 28 Desember 2025:\n" +
-        currentUrl;
-      const url = "https://wa.me/?text=" + encodeURIComponent(text);
-      window.open(url, "_blank");
-    });
-    document.getElementById("btnShareNative").addEventListener("click", async () => {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: "Undangan Pernikahan Nisa & Fadil",
-            text: "Assalamu'alaikum, berikut undangan pernikahan Nisa & Fadil.",
-            url: currentUrl,
-          });
-        } catch (e) {}
-      } else {
-        alert(
-          "Fitur share bawaan tidak tersedia di perangkat ini. Silakan gunakan tombol WhatsApp atau salin link."
-        );
-      }
-    });
+        const btn = this.querySelector('button[type="submit"]');
+        const originalBtnText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="icon">⏳</span><span>Mengirim...</span>';
 
-    /* ===== LIGHTBOX / CAROUSEL GALERI ===== */
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImg = document.getElementById("lightboxImg");
-    const lightboxClose = document.getElementById("lightboxClose");
-    const lightboxPrev = document.getElementById("lightboxPrev");
-    const lightboxNext = document.getElementById("lightboxNext");
+        const sendData = async () => {
+          try {
+            if (
+              !SHEET_SCRIPT_URL ||
+              SHEET_SCRIPT_URL.indexOf(
+                "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE"
+              ) !== -1
+            ) {
+              // Jika URL belum diganti, anggap saja sukses lokal
+            } else {
+              const res = await fetch(SHEET_SCRIPT_URL, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              });
+              if (!res.ok) throw new Error("HTTP " + res.status);
+            }
 
-    const galleryItems = Array.from(document.querySelectorAll(".gallery-item"));
-    let currentIndex = 0;
+            statusMsg.textContent =
+              "Terima kasih, konfirmasi kehadiran Anda sudah terkirim.";
+            statusMsg.style.color = "#1e7e34";
 
-    const gallerySources = galleryItems.map(item => {
-      const img = item.querySelector("img");
-      return {
-        src: img ? img.src : "",
-        alt: img ? (img.alt || "Preview Foto") : "Preview Foto"
-      };
-    });
+            // Update rekap sederhana di sisi front-end
+            if (status === "Insya Allah Hadir") {
+              rsvpSummary.hadir++;
+            } else if (status === "Belum Pasti") {
+              rsvpSummary.belum++;
+            } else {
+              rsvpSummary.tidak++;
+            }
+            renderRsvpSummary();
 
-    function updateLightboxImage(index) {
-      if (!gallerySources.length) return;
-      const safeIndex = (index + gallerySources.length) % gallerySources.length;
-      currentIndex = safeIndex;
-      const item = gallerySources[safeIndex];
-      lightboxImg.src = item.src;
-      lightboxImg.alt = item.alt;
-    }
+            // Reset form
+            this.reset();
+            document.getElementById("rsvpGuests").value = "1";
+          } catch (err) {
+            console.error("Gagal kirim RSVP:", err);
+            statusMsg.textContent =
+              "Maaf, terjadi kendala saat mengirim data. Silakan coba lagi.";
+            statusMsg.style.color = "#b3261e";
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnText;
+          }
+        };
 
-    function openLightbox(index) {
-      updateLightboxImage(index);
-      lightbox.classList.add("open");
-      document.body.classList.add("locked");
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove("open");
-      lightboxImg.src = "";
-      document.body.classList.remove("locked");
-      document.body.classList.add("unlocked");
-    }
-
-    galleryItems.forEach((item, index) => {
-      item.dataset.index = index;
-      item.addEventListener("click", () => {
-        openLightbox(index);
+        sendData();
       });
-    });
 
-    lightboxPrev.addEventListener("click", (e) => {
-      e.stopPropagation();
-      updateLightboxImage(currentIndex - 1);
-    });
-    lightboxNext.addEventListener("click", (e) => {
-      e.stopPropagation();
-      updateLightboxImage(currentIndex + 1);
-    });
-    lightboxClose.addEventListener("click", (e) => {
-      e.stopPropagation();
-      closeLightbox();
-    });
+    // =========================================
+    //              GUESTBOOK
+    // =========================================
+    const guestListEl = document.getElementById("guestList");
+    const guestForm = document.getElementById("guestForm");
 
-    lightbox.addEventListener("click", (e) => {
-      const clickedInsideImage = e.target.closest(".lightbox-img-wrapper");
-      const clickedNav = e.target.closest(".lightbox-nav");
-      const clickedClose = e.target.closest(".lightbox-close");
-      if (!clickedInsideImage && !clickedNav && !clickedClose) {
-        closeLightbox();
+    function renderEmptyGuest() {
+      if (!guestListEl) return;
+      guestListEl.innerHTML =
+        '<div class="guest-empty">Belum ada ucapan yang masuk. Jadilah yang pertama mengirim doa untuk kedua mempelai. 🤍</div>';
+    }
+
+    function createGuestCard(item) {
+      const nama = item.nama || "Tamu";
+      const hubungan = item.hubungan || "";
+      const ucapan = item.ucapan || "";
+      const waktu = item.waktu || "";
+
+      const div = document.createElement("div");
+      div.className = "guest-card";
+
+      const initial = (nama || "T").charAt(0).toUpperCase();
+
+      div.innerHTML = `
+        <div class="guest-card-header">
+          <div class="guest-avatar">${initial}</div>
+          <div class="guest-card-meta-wrap">
+            <div class="guest-card-name" title="${nama}">${nama}</div>
+            <div class="guest-card-meta">
+              ${hubungan ? hubungan + " · " : ""}${waktu}
+            </div>
+          </div>
+        </div>
+        <div class="guest-quote">
+          ${ucapan}
+        </div>
+      `;
+      return div;
+    }
+
+    async function loadGuestbook() {
+      if (!guestListEl) return;
+      guestListEl.innerHTML = "";
+
+      if (
+        !SHEET_SCRIPT_URL ||
+        SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1
+      ) {
+        renderEmptyGuest();
+        return;
       }
-    });
 
-    document.addEventListener("keydown", (e) => {
-      if (!lightbox.classList.contains("open")) return;
-      if (e.key === "Escape") {
-        closeLightbox();
-      } else if (e.key === "ArrowLeft") {
-        updateLightboxImage(currentIndex - 1);
-      } else if (e.key === "ArrowRight") {
-        updateLightboxImage(currentIndex + 1);
+      try {
+        const res = await fetch(SHEET_SCRIPT_URL + "?type=guestbook_list");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        if (!data || !data.length) {
+          renderEmptyGuest();
+          return;
+        }
+
+        data.forEach((item) => {
+          const card = createGuestCard(item);
+          guestListEl.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Gagal load guestbook:", err);
+        renderEmptyGuest();
       }
-    });
+    }
+
+    if (guestForm) {
+      guestForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const nama = document.getElementById("guestName").value.trim();
+        const hubungan = document
+          .getElementById("guestRelation")
+          .value.trim();
+        const ucapan = document
+          .getElementById("guestMessage")
+          .value.trim();
+
+        if (!nama || !ucapan) return;
+
+        const payload = {
+          type: "guestbook",
+          nama,
+          hubungan,
+          ucapan,
+        };
+
+        const btn = this.querySelector('button[type="submit"]');
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML =
+          '<span class="icon">⏳</span><span>Mengirim...</span>';
+
+        const smallHint = this.querySelector(".small-hint");
+        if (smallHint) {
+          smallHint.textContent = "Mengirim ucapan...";
+          smallHint.style.color = "#8a6b48";
+        }
+
+        const send = async () => {
+          try {
+            if (
+              !SHEET_SCRIPT_URL ||
+              SHEET_SCRIPT_URL.indexOf(
+                "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE"
+              ) !== -1
+            ) {
+              // mode lokal
+            } else {
+              const res = await fetch(SHEET_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+              if (!res.ok) throw new Error("HTTP " + res.status);
+            }
+
+            // Tambahkan ke list di atas (prepend)
+            const item = {
+              nama,
+              hubungan,
+              ucapan,
+              waktu: "Baru saja",
+            };
+            const card = createGuestCard(item);
+            if (guestListEl) {
+              if (
+                guestListEl.firstElementChild &&
+                guestListEl.firstElementChild.classList.contains(
+                  "guest-empty"
+                )
+              ) {
+                guestListEl.innerHTML = "";
+              }
+              guestListEl.insertBefore(card, guestListEl.firstChild);
+            }
+
+            this.reset();
+            if (smallHint) {
+              smallHint.textContent =
+                "Terima kasih, ucapan Anda sudah terkirim.";
+              smallHint.style.color = "#1e7e34";
+            }
+          } catch (err) {
+            console.error("Gagal kirim ucapan:", err);
+            if (smallHint) {
+              smallHint.textContent =
+                "Maaf, terjadi kendala saat mengirim ucapan. Silakan coba lagi.";
+              smallHint.style.color = "#b3261e";
+            }
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = original;
+          }
+        };
+
+        send();
+      });
+    }
+
+    // =========================================
+    //              GALERY LIGHTBOX
+    // =========================================
+    (function initLightbox() {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const btnClose = document.getElementById("lightboxClose");
+      const btnPrev = document.getElementById("lightboxPrev");
+      const btnNext = document.getElementById("lightboxNext");
+
+      const galleryItems = Array.from(
+        document.querySelectorAll("#gallery .gallery-item img")
+      );
+      if (!lightbox || !lightboxImg || !galleryItems.length) return;
+
+      let currentIndex = 0;
+
+      function openLightbox(index) {
+        currentIndex = index;
+        const img = galleryItems[currentIndex];
+        if (!img) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || "Preview Foto";
+        lightbox.classList.add("open");
+        document.body.classList.add("locked");
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        document.body.classList.remove("locked");
+        lightboxImg.src = "";
+      }
+
+      function showNext(step) {
+        const total = galleryItems.length;
+        currentIndex = (currentIndex + step + total) % total;
+        const img = galleryItems[currentIndex];
+        if (!img) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || "Preview Foto";
+      }
+
+      galleryItems.forEach((img, index) => {
+        img.parentElement.addEventListener("click", () => openLightbox(index));
+      });
+
+      btnClose.addEventListener("click", closeLightbox);
+      btnPrev.addEventListener("click", () => showNext(-1));
+      btnNext.addEventListener("click", () => showNext(1));
+
+      // Tutup jika klik area gelap di luar foto
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      // Keyboard: ESC & panah
+      document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("open")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") showNext(1);
+        if (e.key === "ArrowLeft") showNext(-1);
+      });
+    })();
+
+    // =========================================
+    //              SHARE SECTION
+    // =========================================
+    (function initShare() {
+      const btnShareNative = document.getElementById("btnShareNative");
+      const btnShareWA = document.getElementById("btnShareWA");
+      const btnCopyLink = document.getElementById("btnCopyLink");
+      const currentUrl = window.location.href.split("#")[0];
+
+      if (btnShareNative) {
+        btnShareNative.addEventListener("click", async () => {
+          const shareData = {
+            title: "Undangan Pernikahan Nisa & Fadil",
+            text:
+              "Assalamu'alaikum, berikut undangan pernikahan Nisa & Fadil. Kami sangat mengharapkan doa dan kehadiran Anda.",
+            url: currentUrl,
+          };
+          if (navigator.share) {
+            try {
+              await navigator.share(shareData);
+            } catch (err) {
+              console.log("Share dibatalkan:", err);
+            }
+          } else {
+            alert(
+              "Fitur share belum didukung di perangkat ini. Silakan gunakan tombol WhatsApp atau Copy Link."
+            );
+          }
+        });
+      }
+
+      if (btnShareWA) {
+        btnShareWA.addEventListener("click", () => {
+          const text =
+            "Assalamu'alaikum, berikut undangan pernikahan Nisa & Fadil:\n\n" +
+            currentUrl +
+            "\n\nKami sangat mengharapkan doa dan kehadiran Anda.";
+          const waUrl =
+            "https://wa.me/?text=" + encodeURIComponent(text);
+          window.open(waUrl, "_blank");
+        });
+      }
+
+      if (btnCopyLink) {
+        btnCopyLink.addEventListener("click", () => {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(currentUrl);
+          } else {
+            const temp = document.createElement("textarea");
+            temp.value = currentUrl;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand("copy");
+            document.body.removeChild(temp);
+          }
+
+          const original = btnCopyLink.innerHTML;
+          btnCopyLink.innerHTML =
+            '<span>✅</span><span>Link Tersalin</span>';
+          setTimeout(() => {
+            btnCopyLink.innerHTML = original;
+          }, 1500);
+        });
+      }
+    })();
+
+    // Load data awal
+    loadRsvpSummaryFromServer();
+    loadGuestbook();
   </script>
 </body>
 </html>
