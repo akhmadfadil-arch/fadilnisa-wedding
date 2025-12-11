@@ -3061,7 +3061,7 @@
 
   <script>
     // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT
-    const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbza0fNOgZhdf25PJD_oW8yHLtWFub875zEs9N6HG1cZOWPUu68hwZ9IaQELT5CcSKZPXw/exec";
+    const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZa2BeDatvUkt2PXDTzkAbX8QH3ItbjLdR99BIIBhgER-KU2-cYyla03mybuDCbFYj/exec";
 
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     window.addEventListener("load", () => { window.scrollTo(0, 0); });
@@ -3449,16 +3449,25 @@
         ucapan: msg,
       };
 
-      statusMsg.textContent = "Mengirim data RSVP...";
+      statusMsg.textContent = "Mengirim data RSVP.";
+
       try {
-        const res = await fetch(SHEET_SCRIPT_URL, {
+        // Kirim sebagai x-www-form-urlencoded + no-cors (fire & forget)
+        const formBody = new URLSearchParams(payload).toString();
+
+        await fetch(SHEET_SCRIPT_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+          body: formBody,
         });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json().catch(() => ({}));
-        statusMsg.textContent = data.message || "RSVP berhasil dikirim. Terima kasih 🙏";
+
+        // Karena mode: "no-cors", kita TIDAK bisa baca res.json().
+        // Tapi request tetap terkirim ke Apps Script.
+
+        statusMsg.textContent = "RSVP berhasil dikirim. Terima kasih 🙏";
 
         // update ringkas lokal
         if (status === "Insya Allah Hadir") rsvpSummary.hadir += 1;
@@ -3466,7 +3475,7 @@
         else if (status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += 1;
         renderRsvpSummary();
 
-        (this).reset();
+        this.reset();
       } catch (err) {
         console.log("Gagal kirim RSVP:", err);
         statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
@@ -3568,24 +3577,24 @@
       }
 
       try {
-        const res = await fetch(SHEET_SCRIPT_URL, {
+        const formBody = new URLSearchParams(payload).toString();
+
+        await fetch(SHEET_SCRIPT_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+          body: formBody,
         });
 
-        if (!res.ok) throw new Error("HTTP " + res.status);
+        // Tidak bisa baca res.json(), tapi data terkirim.
 
-        const data = await res.json().catch(() => ({}));
-
-        // Notifikasi berhasil
         if (hint) {
-          hint.textContent =
-            data.message || "Ucapan berhasil dikirim. Terima kasih 🤍";
+          hint.textContent = "Ucapan berhasil dikirim. Terima kasih 🤍";
           setTimeout(() => (hint.style.opacity = "0"), 1800);
         }
 
-        // Tambahkan ke tampilan list secara real-time
         addGuestCard(
           {
             nama,
@@ -3596,9 +3605,7 @@
           true
         );
 
-        // Reset form
         this.reset();
-
       } catch (err) {
         console.error("Gagal kirim guestbook:", err);
         if (hint) {
