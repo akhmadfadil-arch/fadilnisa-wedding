@@ -376,6 +376,7 @@
         radial-gradient(circle at top, rgba(0,0,0,0.45), rgba(0,0,0,0.85)),
         url("img/bg-hero.jpeg") center center / cover no-repeat;
       color: #fff;
+      overflow: hidden;
     }
     .hero::before {
       content: "";
@@ -791,12 +792,11 @@
 
     .story-track {
       position: relative;
-      padding: 1rem 0.75rem 1.6rem;
-      min-height: 340px;
-      perspective: 1400px;
+      padding: 0.7rem 0.4rem 1.4rem;
+      min-height: 380px;
+      perspective: 1600px;
     }
 
-    /* dua layer belakang – hanya bayangan kosong */
     .story-depth-layer {
       position: absolute;
       inset: 0;
@@ -810,77 +810,56 @@
       z-index: 1;
     }
     .story-depth-layer.back-1 {
-      transform: translateY(14px) scale(0.97) rotateX(5deg);
-      opacity: 0.85;
+      transform: translateY(18px) scale(0.97) rotateX(6deg);
+      opacity: 0.82;
     }
     .story-depth-layer.back-2 {
-      transform: translateY(26px) scale(0.94) rotateX(9deg);
+      transform: translateY(34px) scale(0.94) rotateX(11deg);
       opacity: 0.65;
     }
 
-    /* slide utama – hanya 1 yang aktif (display:grid) */
     .story-slide {
       position: absolute;
       inset: 0;
       margin: auto;
       max-width: 720px;
-      height: 100%;                      /* PENTING */
       background: #ffffff;
       border-radius: 24px;
-      padding: 1.25rem 1.3rem;
+      padding: 1.25rem 1.3rem 1.25rem;
       box-shadow: 0 22px 42px rgba(0,0,0,0.12);
-      display: none;
-      grid-template-columns: 38% 62%;
-      gap: 1.1rem;
-      align-items: stretch;              /* PENTING */
-      overflow: hidden;                  /* 🔒 KUNCI CARD */
-      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+      gap: 1.2rem;
+      align-items: stretch;
+      transform-origin: center;
+      transform: translateX(40px) translateY(0) rotateX(6deg);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      filter: blur(1px);
+      transition:
+        opacity 0.45s ease,
+        visibility 0.45s ease,
+        transform 0.45s ease,
+        filter 0.45s ease;
+      z-index: 3;
     }
 
     .story-slide.active {
-      display: grid;
-      /* opacity: 1;
+      opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transform: translateY(0) scale(1); */
+      filter: none;
+      transform: translateX(0) translateY(0) rotateX(0deg);
     }
 
-    @media (max-width: 820px) {
-      .story-track {
-        min-height: 420px;
-      }
-      .story-slide {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
-      .story-photo-frame {
-        max-height: 220px;
-      }
-
-      .story-text {
-        max-height: 200px;
-      }
-      
-      .story-depth-layer {
-        max-width: 100%;
-      }
-      .story-slide {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 0.9rem;
-        padding: 1.15rem 1.1rem 1.3rem;
-      }
-    }
-
-    /* === FOTO === */
     .story-photo-frame {
       position: relative;
-      width: 100%;
-      height: 100%;                      /* mengikuti card */
-      max-height: 260px;
-      border-radius: 20px;
-      overflow: hidden;                  /* 🔒 */
+      border-radius: 24px;
+      overflow: hidden;
+      min-height: 220px;
       background: #000;
-      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.15);
     }
     .story-photo-frame::before {
       content: "";
@@ -894,9 +873,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
-      /* transform: scale(1.03);
-      transition: transform 0.6s ease; */
+      transform: scale(1.03);
+      transition: transform 0.6s ease;
     }
     .story-slide.active .story-photo-frame img {
       transform: scale(1);
@@ -905,56 +883,56 @@
       position: absolute;
       left: 12px;
       bottom: 12px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
       padding: 0.3rem 0.7rem;
-      font-size: 0.72rem;
       border-radius: 999px;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      z-index: 2;
     }
 
-    /* === TEKS === */
     .story-text-block {
+      position: relative;
+      font-size: 0.9rem;
+      color: #5a4634;
       display: flex;
       flex-direction: column;
-      height: 100%;
-      overflow: hidden;                  /* 🔒 */
     }
-
-    /* judul */
     .story-step-label {
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.18em;
       color: #b28655;
+      margin-bottom: 0.18rem;
     }
     .story-title {
       font-family: "Cinzel", serif;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 600;
       color: #4a331f;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
     }
-
-    /* konten teks – SCROLL INTERNAL */
     .story-text {
       font-size: 0.9rem;
       color: #5a4634;
-      line-height: 1.65;
-      overflow-y: auto;                  /* ✅ scroll dalam card */
-      padding-right: 6px;
+      margin-top: 0.2rem;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 0.35rem;
     }
-    .story-text span.icon {
-      margin-right: 0.22rem;
-    }
-
-    /* scrollbar halus */
     .story-text::-webkit-scrollbar {
       width: 4px;
     }
     .story-text::-webkit-scrollbar-thumb {
-      background: rgba(196,154,108,0.4);
+      background: rgba(196,154,108,0.7);
       border-radius: 999px;
     }
+    .story-text span.icon { margin-right: 0.22rem; }
 
     .story-step-pill {
       display: inline-flex;
@@ -968,7 +946,6 @@
       margin-bottom: 0.4rem;
     }
 
-    /* tombol next / prev */
     .story-nav {
       position: absolute;
       top: 50%;
@@ -986,9 +963,7 @@
       z-index: 5;
       box-shadow: 0 10px 24px rgba(0,0,0,0.28);
     }
-    .story-nav:hover {
-      background: rgba(0,0,0,0.8);
-    }
+    .story-nav:hover { background: rgba(0,0,0,0.8); }
     .story-nav.prev { left: 8px; }
     .story-nav.next { right: 8px; }
     @media (max-width: 640px) {
@@ -996,7 +971,6 @@
       .story-nav.next { right: 4px; }
     }
 
-    /* dots bawah */
     .story-dots {
       display: flex;
       justify-content: center;
@@ -1010,21 +984,51 @@
       border: none;
       background: rgba(196,154,108,0.3);
       cursor: pointer;
-      transition: width 0.2s ease, background 0.2s ease;
+      transition: width 0.2s ease, background 0.2s ease, transform 0.2s ease;
     }
     .story-dot.active {
       width: 18px;
       background: #c49a6c;
     }
-    .story-text::after {
-      content: "";
-      position: sticky;
-      bottom: 0;
-      height: 24px;
-      display: block;
-      background: linear-gradient(transparent, #fff);
+
+    .story-progress {
+      margin-top: 2.5rem;
+    }
+    .story-progress-line {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(196,154,108,0.25);
+      overflow: hidden;
     }
 
+    .story-progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg,#c49a6c,#f2d3a5);
+      transition: width 0.35s ease;     /* animasi halus saat pindah step */
+    }
+
+    .story-progress-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.45rem;
+      font-size: 0.78rem;
+      color: #a27a4b;
+    }
+
+    .story-progress-step {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .story-progress-step.active {
+      opacity: 1;
+      font-weight: 600;
+      transform: translateY(-1px);
+    }
 
     /* EVENT */
     .events-wrapper {
@@ -1378,30 +1382,20 @@
     }
     .gift-steps {
       list-style: none;
-      margin: 0 0 0.6rem;
+      margin: 0.4rem 0 0.6rem;
       padding: 0;
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
     }
     .gift-step-item {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.45rem 0.55rem;
-      align-items: flex-start;
-      font-size: 0.84rem;
-      margin-bottom: 0.35rem;
+      border-radius: 16px;
+      padding: 0.35rem 0.75rem;
+      background: rgba(255,255,255,0.85);
+      border: 1px dashed rgba(196,154,108,0.6);
+      font-size: 0.82rem;
     }
-    .gift-step-badge {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      background: #c49a6c;
-      color: #fff;
-      font-size: 0.78rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.22);
-      margin-top: 0.05rem;
-    }
+
     .gift-physical-address {
       margin-top: 0.65rem;
       padding: 0.75rem 0.7rem;
@@ -2002,6 +1996,153 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ========= MOTION & MOTION GRAPHIC ========= */
+
+    /* Bubble dekoratif mengambang */
+    .motion-orb {
+      position: absolute;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.9), rgba(196,154,108,0.2));
+      mix-blend-mode: screen;
+      opacity: 0.55;
+      filter: blur(0.3px);
+      pointer-events: none;
+      animation: floatOrb 18s ease-in-out infinite alternate;
+    }
+
+    /* posisi khusus love story */
+    .motion-orb.story-1 {
+      width: 160px;
+      height: 160px;
+      top: -60px;
+      right: -40px;
+    }
+    .motion-orb.story-2 {
+      width: 120px;
+      height: 120px;
+      bottom: -40px;
+      left: -20px;
+      animation-delay: 3s;
+    }
+
+    @keyframes floatOrb {
+      0%   { transform: translate3d(0, 0, 0) scale(1);   opacity: 0.35; }
+      50%  { transform: translate3d(16px, -12px, 0) scale(1.05); opacity: 0.6; }
+      100% { transform: translate3d(-8px, 10px, 0) scale(0.98);  opacity: 0.4; }
+    }
+
+    /* Kartu sedikit naik + “glow” saat hover */
+    .hover-rise {
+      transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        border-color 220ms ease,
+        background 220ms ease;
+    }
+    .hover-rise:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.14);
+      border-color: rgba(196,154,108,0.55);
+    }
+
+    /* dot indikator love story berdenyut */
+    .story-dot.active {
+      width: 20px;
+      background: #c49a6c;
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1);   opacity: 1; }
+      50%      { transform: scale(1.25); opacity: 0.7; }
+    }
+
+    /* kartu love story tampak sedikit “pop” saat aktif */
+    .story-slide.active {
+      box-shadow: 0 26px 50px rgba(0,0,0,0.16);
+    }
+
+    /* sedikit motion untuk floating actions */
+    .floating-actions {
+      animation: floatFAB 4s ease-in-out infinite alternate;
+    }
+    @keyframes floatFAB {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+
+    /* RESPONSIVE HP – teks Love Story bisa di-scroll di dalam card */
+    @media (max-width: 820px) {
+
+      .story-track {
+        min-height: 520px;           /* tinggi area love story relatif tetap */
+        padding-bottom: 1.6rem;
+      }
+
+      .story-slide {
+        grid-template-columns: 1fr;  /* foto di atas, teks di bawah */
+        height: 100%;
+        padding: 1.2rem 1.1rem 1.5rem;
+        gap: 1rem;
+      }
+
+      .story-photo-frame {
+        max-height: 260px;
+        height: auto;
+      }
+
+      /* BAGIAN INI YANG PENTING */
+      .story-text-block {
+        position: relative;
+        max-height: 220px;          /* tinggi area teks di HP */
+        overflow-y: auto;           /* aktifkan scroll vertikal */
+        padding-right: 0.4rem;      /* ruang kecil untuk scrollbar */
+      }
+
+      .story-text {
+        max-height: none !important;
+        overflow: visible !important;
+        margin-top: 0.4rem;
+      }
+
+      /* Tambah efek gradasi halus di bawah sebagai hint masih bisa discroll */
+      .story-text-block::after {
+        content: "";
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 32px;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0.95)
+        );
+      }
+
+      /* opsional: kecilkan sedikit jarak progres indikator */
+      .story-dots {
+        margin-top: 0.7rem;
+      }
+    }
+
+
+    /* RESPONSIVE – bubble di HP */
+    @media (max-width: 768px) {
+      .motion-orb.story-1 {
+        width: 120px;
+        height: 120px;
+        top: -40px;
+        right: -20px;
+      }
+      .motion-orb.story-2 {
+        width: 90px;
+        height: 90px;
+        bottom: -30px;
+        left: -15px;
+      }
+    }
   </style>
 </head>
 <body class="locked">
@@ -2071,6 +2212,7 @@
   <main id="page">
     <!-- HERO -->
     <section id="hero" class="hero">
+
       <div class="hero-inner">
         <div class="hero-left">
           <div class="hero-left-sub">The Wedding of</div>
@@ -2137,7 +2279,7 @@
     <section id="welcome" class="section-decor">
       <div class="container">
         <div class="intro-grid">
-          <div class="intro-text-block reveal">
+          <div class="intro-text-block reveal hover-rise">
             <div class="intro-heading">Welcome To Our Wedding</div>
             <p>
               Dengan memohon rahmat dan ridha Allah Subhanahu Wa Ta'ala, kami bermaksud
@@ -2150,7 +2292,7 @@
             </p>
           </div>
 
-          <div class="intro-quote-card reveal">
+          <div class="intro-quote-card reveal hover-rise">
             <div class="intro-quote-inner">
               <span class="arab">
                 وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنفُسِكُمْ أَزْوَاجًا
@@ -2177,7 +2319,7 @@
 
         <div class="couple-grid">
           <!-- Bride -->
-          <div class="person-card reveal">
+          <div class="person-card reveal hover-rise">
             <div class="person-inner">
               <div class="person-photo">
                 <img src="img/wfoto.jpeg" alt="Fahrunnisa Maharani" />
@@ -2195,7 +2337,7 @@
           </div>
 
           <!-- Groom -->
-          <div class="person-card reveal">
+          <div class="person-card reveal hover-rise">
             <div class="person-inner">
               <div class="person-photo">
                 <img src="img/mfoto.jpeg" alt="Akhmad Fadil Mubarok" />
@@ -2223,7 +2365,11 @@
         <div class="section-divider"></div>
 
         <div class="story-carousel-wrapper reveal">
-          <div class="story-carousel-shell">
+          <div class="story-carousel-shell hover-rise">
+            <!-- motion graphic bubble love story -->
+            <span class="motion-orb story-1"></span>
+            <span class="motion-orb story-2"></span>
+
             <div class="story-intro-label">Kisah Singkat</div>
             <div class="story-intro-title">Perjalanan yang Allah Rangkai dengan Indah</div>
             <p class="story-intro-text">
@@ -2235,7 +2381,7 @@
             <button class="story-nav prev" id="storyPrev">‹</button>
             <button class="story-nav next" id="storyNext">›</button>
 
-            <div class="story-track">
+            <div class="story-track" id="storyTrack">
               <!-- dua kartu bayangan di belakang -->
               <div class="story-depth-layer back-2"></div>
               <div class="story-depth-layer back-1"></div>
@@ -2365,6 +2511,20 @@
                 </div>
               </article>
             </div>
+
+            <!-- progress indicator -->
+            <div class="story-progress">
+              <div class="story-progress-line">
+                <div class="story-progress-fill" id="storyProgressFill"></div>
+              </div>
+              <div class="story-progress-steps">
+                <span class="story-progress-step active" data-step="0">Awal</span>
+                <span class="story-progress-step" data-step="1">Pertemuan</span>
+                <span class="story-progress-step" data-step="2">Kasih</span>
+                <span class="story-progress-step" data-step="3">Lamaran</span>
+                <span class="story-progress-step" data-step="4">Bahagia</span>
+              </div>
+            </div>
           </div>
 
           <div class="story-dots">
@@ -2387,7 +2547,7 @@
 
         <div class="events-wrapper">
           <!-- Akad -->
-          <div class="event-card reveal">
+          <div class="event-card reveal hover-rise">
             <div class="event-inner">
               <div class="event-type">Akad Nikah</div>
               <div class="event-title">Akad Pernikahan</div>
@@ -2425,7 +2585,7 @@
           </div>
 
           <!-- Resepsi -->
-          <div class="event-card reveal">
+          <div class="event-card reveal hover-rise">
             <div class="event-inner">
               <div class="event-type">Walimatul 'Ursy</div>
               <div class="event-title">Resepsi Pernikahan</div>
@@ -2473,7 +2633,7 @@
         <p class="section-subtitle">Petunjuk Lokasi</p>
         <div class="section-divider"></div>
 
-        <div class="card-soft map-card reveal">
+        <div class="card-soft map-card reveal hover-rise">
           <div style="font-size:0.88rem; color:#5a4634;">
             <strong>Gedung Sepintu Sedulang</strong><br />
             Kec. Sungailiat, Kab. Bangka,<br />Kepulauan Bangka Belitung
@@ -2501,7 +2661,7 @@
 
         <div class="gift-wrapper">
           <!-- Transfer -->
-          <div class="card-soft reveal">
+          <div class="card-soft reveal hover-rise">
             <div class="gift-transfer">
               <div class="gift-transfer-inner">
                 <div class="gift-transfer-header">
@@ -2512,11 +2672,11 @@
                   </div>
                 </div>
 
-                <p class="gift-transfer-text">
+                <!-- <p class="gift-transfer-text">
                   Jika berkenan memberikan hadiah dalam bentuk transfer, Bapak/Ibu/Saudara/i
                   dapat mengirimkannya ke rekening berikut. Setiap kebaikan yang diberikan,
                   insya Allah menjadi doa dan keberkahan untuk kita semua.
-                </p>
+                </p> -->
 
                 <div class="gift-transfer-badge-row">
                   <div class="gift-transfer-badge">
@@ -2567,7 +2727,7 @@
           </div>
 
           <!-- Kado fisik -->
-          <div class="card-soft reveal">
+          <div class="card-soft reveal hover-rise">
             <div class="gift-physical">
               <div class="gift-physical-inner">
                 <div class="gift-physical-header">
@@ -2583,29 +2743,18 @@
                     kami dengan senang hati menerimanya melalui alamat berikut.
                   </p>
 
+                  <!-- Pengisi / hiasan singkat
                   <ul class="gift-steps">
                     <li class="gift-step-item">
-                      <div class="gift-step-badge">1</div>
-                      <div class="gift-step-text">
-                        <strong>Siapkan kado terbaik</strong> yang ingin Bapak/Ibu/Saudara/i berikan
-                        untuk kami.
-                      </div>
+                      Terima kasih atas setiap perhatian, doa, dan hadiah yang Bapak/Ibu/Saudara/i titipkan.
                     </li>
                     <li class="gift-step-item">
-                      <div class="gift-step-badge">2</div>
-                      <div class="gift-step-text">
-                        <strong>Kirimkan ke alamat di bawah ini</strong> atau dapat diantar langsung
-                        pada saat hari H acara resepsi.
-                      </div>
+                      Setiap kado menjadi pengingat akan kasih sayang yang mengiringi langkah baru kami.
                     </li>
                     <li class="gift-step-item">
-                      <div class="gift-step-badge">3</div>
-                      <div class="gift-step-text">
-                        <strong>Mohon cantumkan nama pengirim</strong> pada paket agar kami dapat
-                        menyampaikan ucapan terima kasih secara khusus.
-                      </div>
+                      Semoga Allah membalas kebaikan Anda dengan keberkahan yang berlipat ganda.
                     </li>
-                  </ul>
+                  </ul> -->
 
                   <div class="gift-physical-address" id="alamat-kado">
                     <strong>Penerima:</strong> Fahrunnisa Maharani<br />
@@ -2643,7 +2792,7 @@
 
         <div class="rsvp-wrapper">
           <!-- Info -->
-          <div class="card-soft rsvp-card reveal">
+          <div class="card-soft rsvp-card reveal hover-rise">
             <div class="rsvp-card-inner">
               <div class="rsvp-step-label">Informasi</div>
               <h3>Konfirmasi Kehadiran Anda</h3>
@@ -2675,7 +2824,7 @@
           </div>
 
           <!-- Form -->
-          <div class="card-soft rsvp-card reveal">
+          <div class="card-soft rsvp-card reveal hover-rise">
             <div class="rsvp-card-inner">
               <div class="rsvp-step-label">Formulir</div>
               <h3>Isi Form RSVP</h3>
@@ -2719,7 +2868,7 @@
         </div>
 
         <!-- Rekap RSVP -->
-        <div class="rsvp-summary-card card-soft reveal">
+        <div class="rsvp-summary-card card-soft reveal hover-rise">
           <div class="rsvp-summary-header">
             <div class="rsvp-summary-icon">📊</div>
             <div>
@@ -2761,31 +2910,31 @@
 
         <div class="gallery-grid">
           <!-- 1-25 -->
-          <figure class="gallery-item reveal"><img src="img/foto1.jpeg" alt="foto1"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto2.jpeg" alt="foto2"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto3.jpeg" alt="foto3"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto4.jpeg" alt="foto4"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto5.jpeg" alt="foto5"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto6.jpeg" alt="foto6"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto7.jpeg" alt="foto7"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto8.jpeg" alt="foto8"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto9.jpeg" alt="foto9"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto10.jpeg" alt="foto10"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto11.jpeg" alt="foto11"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto12.jpeg" alt="foto12"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto13.jpeg" alt="foto13"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto14.jpeg" alt="foto14"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto15.jpeg" alt="foto15"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto16.jpeg" alt="foto16"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto17.jpeg" alt="foto17"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto18.jpeg" alt="foto18"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto19.jpeg" alt="foto19"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto20.jpeg" alt="foto20"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto21.jpeg" alt="foto21"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto22.jpeg" alt="foto22"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto23.jpeg" alt="foto23"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto24.jpeg" alt="foto24"><figcaption>Our Moment</figcaption></figure>
-          <figure class="gallery-item reveal"><img src="img/foto25.jpeg" alt="foto25"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto1.jpeg" alt="foto1"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto2.jpeg" alt="foto2"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto3.jpeg" alt="foto3"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto4.jpeg" alt="foto4"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto5.jpeg" alt="foto5"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto6.jpeg" alt="foto6"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto7.jpeg" alt="foto7"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto8.jpeg" alt="foto8"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto9.jpeg" alt="foto9"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto10.jpeg" alt="foto10"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto11.jpeg" alt="foto11"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto12.jpeg" alt="foto12"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto13.jpeg" alt="foto13"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto14.jpeg" alt="foto14"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto15.jpeg" alt="foto15"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto16.jpeg" alt="foto16"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto17.jpeg" alt="foto17"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto18.jpeg" alt="foto18"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto19.jpeg" alt="foto19"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto20.jpeg" alt="foto20"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto21.jpeg" alt="foto21"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto22.jpeg" alt="foto22"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto23.jpeg" alt="foto23"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto24.jpeg" alt="foto24"><figcaption>Our Moment</figcaption></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="img/foto25.jpeg" alt="foto25"><figcaption>Our Moment</figcaption></figure>
         </div>
       </div>
     </section>
@@ -2799,7 +2948,7 @@
 
         <div class="guestbook-wrapper">
           <!-- List ucapan -->
-          <div class="card-soft reveal">
+          <div class="card-soft reveal hover-rise">
             <h3 style="font-size:1rem; font-weight:600; color:#4a331f; margin-bottom:0.9rem; font-family:'Cinzel',serif;">
               Ucapan yang Masuk
             </h3>
@@ -2809,7 +2958,7 @@
           </div>
 
           <!-- Form ucapan -->
-          <div class="card-soft reveal">
+          <div class="card-soft reveal hover-rise">
             <h3 style="font-size:1rem; font-weight:600; color:#4a331f; margin-bottom:0.9rem; font-family:'Cinzel',serif;">
               Kirim Doa &amp; Ucapan
             </h3>
@@ -2845,7 +2994,7 @@
         <p class="section-subtitle">Sebarkan Kebahagiaan</p>
         <div class="section-divider"></div>
 
-        <div class="card-soft reveal">
+        <div class="card-soft reveal hover-rise">
           <div class="share-card">
             <div class="share-card-inner">
               <div class="share-header">
@@ -2911,30 +3060,22 @@
   </footer>
 
   <script>
-    // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT MU
-    const SHEET_SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbza0fNOgZhdf25PJD_oW8yHLtWFub875zEs9N6HG1cZOWPUu68hwZ9IaQELT5CcSKZPXw/exec";
+    // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT
+    const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbza0fNOgZhdf25PJD_oW8yHLtWFub875zEs9N6HG1cZOWPUu68hwZ9IaQELT5CcSKZPXw/exec";
 
-    // Matikan auto scroll restore
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    window.addEventListener("load", () => {
-      window.scrollTo(0, 0);
-    });
+    window.addEventListener("load", () => { window.scrollTo(0, 0); });
 
-    // ==== Helper query param ====
     function getQueryParam(key) {
       const params = new URLSearchParams(window.location.search);
       return params.get(key) || "";
     }
-
-    // Isi nama tamu di cover dari ?to=
     (function fillGuestName() {
       const name = getQueryParam("to");
       const el = document.getElementById("guestNameCover");
       if (el) el.textContent = name ? name : "Bapak/Ibu/Saudara/i";
     })();
 
-    // ==== COVER & MUSIK ====
     const cover = document.getElementById("cover");
     const btnOpenCover = document.getElementById("btnOpenCover");
     const bgm = document.getElementById("bgm");
@@ -2949,59 +3090,47 @@
 
       if (bgm && !bgmStarted) {
         bgm.volume = 0.8;
-        bgm
-          .play()
-          .then(() => {
-            bgmStarted = true;
-            fabMusicLabel.textContent = "Musik Menyala";
-          })
-          .catch(() => {});
+        bgm.play().then(() => {
+          bgmStarted = true;
+          fabMusicLabel.textContent = "Musik Menyala";
+        }).catch(() => {});
       }
     });
 
-    // ==== NAVBAR & FAB ====
     const navToggle = document.getElementById("navToggle");
     const navLinks = document.getElementById("navLinks");
     navToggle.addEventListener("click", () => {
       navLinks.classList.toggle("open");
     });
-
-    document
-      .querySelectorAll(".nav-links button[data-scroll]")
-      .forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const target = btn.getAttribute("data-scroll");
-          const el = document.querySelector(target);
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-          if (window.innerWidth <= 768) navLinks.classList.remove("open");
-        });
+    document.querySelectorAll(".nav-links button[data-scroll]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-scroll");
+        const el = document.querySelector(target);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+        if (window.innerWidth <= 768) navLinks.classList.remove("open");
       });
+    });
 
     document.getElementById("fabRSVP").addEventListener("click", () => {
       document.getElementById("rsvp").scrollIntoView({ behavior: "smooth" });
     });
-
     document.getElementById("fabMusic").addEventListener("click", () => {
       if (!bgm) return;
       if (bgm.paused) {
-        bgm
-          .play()
-          .then(() => {
-            bgmStarted = true;
-            fabMusicLabel.textContent = "Musik Menyala";
-          })
-          .catch(() => {});
+        bgm.play().then(() => {
+          bgmStarted = true;
+          fabMusicLabel.textContent = "Musik Menyala";
+        }).catch(() => {});
       } else {
         bgm.pause();
         fabMusicLabel.textContent = "Musik Dimatikan";
       }
     });
-
     document.getElementById("backToTop").addEventListener("click", () => {
       document.getElementById("hero").scrollIntoView({ behavior: "smooth" });
     });
 
-    // ==== REVEAL ANIMATION ====
+    // Reveal on scroll
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -3016,12 +3145,10 @@
       );
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     } else {
-      document
-        .querySelectorAll(".reveal")
-        .forEach((el) => el.classList.add("show"));
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("show"));
     }
 
-    // ==== COUNTDOWN ====
+    // Countdown
     (function initCountdown() {
       const targetDate = new Date("2025-12-28T07:30:00+07:00");
       const daysEl = document.getElementById("cd-days");
@@ -3051,12 +3178,11 @@
         minutesEl.textContent = String(minutes).padStart(2, "0");
         secondsEl.textContent = String(seconds).padStart(2, "0");
       }
-
       updateCountdown();
       const timer = setInterval(updateCountdown, 1000);
     })();
 
-    // ==== SALIN TEKS (REK / ALAMAT) ====
+    // Salin teks (rekening / alamat)
     document.querySelectorAll(".copy-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const targetId = btn.getAttribute("data-copy-target");
@@ -3064,7 +3190,7 @@
         if (!targetEl) return;
 
         const text = targetEl.innerText || targetEl.textContent || "";
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (navigator.clipboard) {
           navigator.clipboard.writeText(text);
         } else {
           const temp = document.createElement("textarea");
@@ -3077,71 +3203,197 @@
 
         const original = btn.innerHTML;
         btn.innerHTML = "✅ Tersalin";
-        setTimeout(() => {
-          btn.innerHTML = original;
-        }, 1500);
+        setTimeout(() => { btn.innerHTML = original; }, 1500);
       });
     });
 
-    // =========================================
-    //           LOVE STORY CAROUSEL
-    // =========================================
-    (function initStoryCarousel() {
-      const slides = Array.from(document.querySelectorAll(".story-slide"));
-      const dots = Array.from(document.querySelectorAll(".story-dot"));
-      const btnPrev = document.getElementById("storyPrev");
-      const btnNext = document.getElementById("storyNext");
+    /* ================== LOVE STORY CAROUSEL ================== */
+    /* ==================== LOVE STORY CAROUSEL + PROGRESS ==================== */
+    (function () {
+      const slides  = Array.from(document.querySelectorAll('.story-slide'));
+      const dots    = Array.from(document.querySelectorAll('.story-dot'));
+      const btnPrev = document.getElementById('storyPrev');
+      const btnNext = document.getElementById('storyNext');
+
+      // PROGRESS: line + teks step
+      const progressFill  = document.getElementById('storyProgressFill');
+      const stepLabels    = Array.from(document.querySelectorAll('.story-progress-step'));
+
       if (!slides.length) return;
 
-      let currentIndex = 0;
+      const totalSlides = slides.length;        // harus sama jumlahnya dengan step dan dot
+      let currentIndex  = 0;
+      let isAnimating   = false;
 
-      function showSlide(index) {
-        const total = slides.length;
-        if (index < 0) index = total - 1;
-        if (index >= total) index = 0;
-        currentIndex = index;
+      // Helper: bersihkan class animasi pada satu slide
+      function resetSlideClasses(slide) {
+        slide.classList.remove(
+          'active',
+          'enter-from-right',
+          'enter-from-left',
+          'exit-to-left',
+          'exit-to-right'
+        );
+      }
 
+      // UPDATE SEMUA STATE (slide, dot, step, progress bar)
+      function updateStoryState() {
+        // pastikan index selalu loop
+        currentIndex = (currentIndex + totalSlides) % totalSlides;
+
+        // slide aktif
         slides.forEach((slide, i) => {
-          slide.classList.toggle("active", i === currentIndex);
+          slide.classList.toggle('active', i === currentIndex);
         });
+
+        // dot indikator (kalau ada)
+        if (dots.length) {
+          dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentIndex);
+          });
+        }
+
+        // label step (Awal, Pertemuan, dst)
+        if (stepLabels.length) {
+          stepLabels.forEach((step, i) => {
+            step.classList.toggle('active', i === currentIndex);
+          });
+        }
+
+        // progress bar (0% di langkah pertama, 100% di langkah terakhir)
+        if (progressFill && totalSlides > 1) {
+          const percent = (currentIndex / (totalSlides - 1)) * 100;  // 0, 25, 50, 75, 100
+          progressFill.style.width = percent + '%';
+          progressFill.setAttribute('aria-valuenow', String(currentIndex + 1));
+          progressFill.setAttribute('aria-valuemax', String(totalSlides));
+        }
+      }
+
+      // ANIMASI PINDAH SLIDE
+      function goToStory(targetIndex, direction) {
+        if (isAnimating || !slides.length) return;
+        isAnimating = true;
+
+        const oldIndex = currentIndex;
+        const newIndex = (targetIndex + totalSlides) % totalSlides; // loop
+
+        if (oldIndex === newIndex) {
+          isAnimating = false;
+          return;
+        }
+
+        const oldSlide = slides[oldIndex];
+        const newSlide = slides[newIndex];
+
+        resetSlideClasses(oldSlide);
+        resetSlideClasses(newSlide);
+
+        // posisi awal slide baru + arah animasi
+        if (direction === 'next') {
+          oldSlide.classList.add('active', 'exit-to-left');
+          newSlide.classList.add('enter-from-right');
+        } else {
+          oldSlide.classList.add('active', 'exit-to-right');
+          newSlide.classList.add('enter-from-left');
+        }
+
+        // paksa reflow supaya animasi kebaca
+        void newSlide.offsetWidth;
+
+        newSlide.classList.add('active');
+
+        setTimeout(() => {
+          resetSlideClasses(oldSlide);
+          newSlide.classList.remove(
+            'enter-from-right',
+            'enter-from-left',
+            'exit-to-left',
+            'exit-to-right'
+          );
+          newSlide.classList.add('active');
+
+          currentIndex = newIndex;
+          updateStoryState();
+          isAnimating = false;
+        }, 450); // sama dengan durasi transition di CSS
+      }
+
+      // TOMBOL NEXT / PREV
+      if (btnNext) {
+        btnNext.addEventListener('click', () => {
+          goToStory(currentIndex + 1, 'next');
+        });
+      }
+      if (btnPrev) {
+        btnPrev.addEventListener('click', () => {
+          goToStory(currentIndex - 1, 'prev');
+        });
+      }
+
+      // KLIK DOT (bawah slide bulat-bulat)
+      if (dots.length) {
         dots.forEach((dot, i) => {
-          dot.classList.toggle("active", i === currentIndex);
+          dot.addEventListener('click', () => {
+            if (i === currentIndex) return;
+            const direction = i > currentIndex ? 'next' : 'prev';
+            goToStory(i, direction);
+          });
         });
       }
 
-      btnPrev.addEventListener("click", () => {
-        showSlide(currentIndex - 1);
-        resetAuto();
-      });
-      btnNext.addEventListener("click", () => {
-        showSlide(currentIndex + 1);
-        resetAuto();
-      });
-      dots.forEach((dot, i) => {
-        dot.addEventListener("click", () => {
-          showSlide(i);
-          resetAuto();
+      // KLIK STEP TEKS ("Awal", "Pertemuan", dst)
+      if (stepLabels.length) {
+        stepLabels.forEach((step, i) => {
+          step.addEventListener('click', () => {
+            if (i === currentIndex) return;
+            const direction = i > currentIndex ? 'next' : 'prev';
+            goToStory(i, direction);
+          });
         });
-      });
-
-      // Auto slide
-      let autoTimer = setInterval(() => {
-        showSlide(currentIndex + 1);
-      }, 9000);
-
-      function resetAuto() {
-        clearInterval(autoTimer);
-        autoTimer = setInterval(() => {
-          showSlide(currentIndex + 1);
-        }, 9000);
       }
 
-      showSlide(0);
+      // SWIPE (HP)
+      let startX = 0;
+      let isTouching = false;
+
+      function handleTouchStart(e) {
+        isTouching = true;
+        startX = e.touches[0].clientX;
+      }
+
+      function handleTouchMove(e) {
+        if (!isTouching) return;
+        // bisa ditambah efek drag kalau mau
+      }
+
+      function handleTouchEnd(e) {
+        if (!isTouching) return;
+        isTouching = false;
+        const endX = e.changedTouches[0].clientX;
+        const diffX = endX - startX;
+
+        if (Math.abs(diffX) > 40) {
+          if (diffX < 0) {
+            goToStory(currentIndex + 1, 'next'); // swipe kiri → next
+          } else {
+            goToStory(currentIndex - 1, 'prev'); // swipe kanan → prev
+          }
+        }
+      }
+
+      const storyTrack = document.querySelector('.story-track');
+      if (storyTrack) {
+        storyTrack.addEventListener('touchstart', handleTouchStart, { passive: true });
+        storyTrack.addEventListener('touchmove', handleTouchMove, { passive: true });
+        storyTrack.addEventListener('touchend', handleTouchEnd);
+      }
+
+      // INIT PERTAMA
+      updateStoryState();
     })();
 
-    // =========================================
-    //              RSVP + REKAP
-    // =========================================
+    
+    /* ================== RSVP & REKAP ================== */
     const rsvpSummary = { hadir: 0, belum: 0, tidak: 0 };
 
     function renderRsvpSummary() {
@@ -3149,20 +3401,19 @@
       const belumEl = document.getElementById("rsvpSumBelum");
       const tidakEl = document.getElementById("rsvpSumTidak");
       const totalEl = document.getElementById("rsvpSumTotal");
+
       if (!hadirEl) return;
 
       hadirEl.textContent = rsvpSummary.hadir;
       belumEl.textContent = rsvpSummary.belum;
       tidakEl.textContent = rsvpSummary.tidak;
+
       const total = rsvpSummary.hadir + rsvpSummary.belum + rsvpSummary.tidak;
       totalEl.textContent = total;
     }
 
     async function loadRsvpSummaryFromServer() {
-      if (
-        !SHEET_SCRIPT_URL ||
-        SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1
-      ) {
+      if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
         renderRsvpSummary();
         return;
       }
@@ -3179,386 +3430,306 @@
       renderRsvpSummary();
     }
 
-    document
-      .getElementById("rsvpForm")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
-        const name = document.getElementById("rsvpName").value.trim();
-        const phone = document.getElementById("rsvpPhone").value.trim();
-        const status = document.getElementById("rsvpStatus").value;
-        const guests = document.getElementById("rsvpGuests").value || "1";
-        const msg = document.getElementById("rsvpMessage").value.trim();
-        const statusMsg = document.getElementById("rsvpStatusMsg");
+    document.getElementById("rsvpForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const name = document.getElementById("rsvpName").value.trim();
+      const phone = document.getElementById("rsvpPhone").value.trim();
+      const status = document.getElementById("rsvpStatus").value;
+      const guests = document.getElementById("rsvpGuests").value || "1";
+      const msg = document.getElementById("rsvpMessage").value.trim();
+      const statusMsg = document.getElementById("rsvpStatusMsg");
+      if (!name) return;
 
-        if (!name) return;
+      const payload = {
+        type: "rsvp",
+        nama: name,
+        whatsapp: phone,
+        status: status,
+        jumlah: guests,
+        ucapan: msg,
+      };
 
-        const payload = {
-          type: "rsvp",
-          nama: name,
-          whatsapp: phone,
-          status: status,
-          jumlah: guests,
-          ucapan: msg,
-        };
+      statusMsg.textContent = "Mengirim data RSVP...";
+      try {
+        const res = await fetch(SHEET_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json().catch(() => ({}));
+        statusMsg.textContent = data.message || "RSVP berhasil dikirim. Terima kasih 🙏";
 
-        statusMsg.textContent = "Mengirim data...";
-        statusMsg.style.color = "#8a6b48";
+        // update ringkas lokal
+        if (status === "Insya Allah Hadir") rsvpSummary.hadir += 1;
+        else if (status === "Belum Pasti") rsvpSummary.belum += 1;
+        else if (status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += 1;
+        renderRsvpSummary();
 
-        const btn = this.querySelector('button[type="submit"]');
-        const originalBtnText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="icon">⏳</span><span>Mengirim...</span>';
+        (this).reset();
+      } catch (err) {
+        console.log("Gagal kirim RSVP:", err);
+        statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
+      }
+    });
 
-        const sendData = async () => {
-          try {
-            if (
-              !SHEET_SCRIPT_URL ||
-              SHEET_SCRIPT_URL.indexOf(
-                "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE"
-              ) !== -1
-            ) {
-              // Jika URL belum diganti, anggap saja sukses lokal
-            } else {
-              const res = await fetch(SHEET_SCRIPT_URL, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-              });
-              if (!res.ok) throw new Error("HTTP " + res.status);
-            }
-
-            statusMsg.textContent =
-              "Terima kasih, konfirmasi kehadiran Anda sudah terkirim.";
-            statusMsg.style.color = "#1e7e34";
-
-            // Update rekap sederhana di sisi front-end
-            if (status === "Insya Allah Hadir") {
-              rsvpSummary.hadir++;
-            } else if (status === "Belum Pasti") {
-              rsvpSummary.belum++;
-            } else {
-              rsvpSummary.tidak++;
-            }
-            renderRsvpSummary();
-
-            // Reset form
-            this.reset();
-            document.getElementById("rsvpGuests").value = "1";
-          } catch (err) {
-            console.error("Gagal kirim RSVP:", err);
-            statusMsg.textContent =
-              "Maaf, terjadi kendala saat mengirim data. Silakan coba lagi.";
-            statusMsg.style.color = "#b3261e";
-          } finally {
-            btn.disabled = false;
-            btn.innerHTML = originalBtnText;
-          }
-        };
-
-        sendData();
-      });
-
-    // =========================================
-    //              GUESTBOOK
-    // =========================================
+    /* ================== GUESTBOOK ================== */
     const guestListEl = document.getElementById("guestList");
-    const guestForm = document.getElementById("guestForm");
 
-    function renderEmptyGuest() {
-      if (!guestListEl) return;
-      guestListEl.innerHTML =
-        '<div class="guest-empty">Belum ada ucapan yang masuk. Jadilah yang pertama mengirim doa untuk kedua mempelai. 🤍</div>';
+    function renderGuestEmpty() {
+      guestListEl.innerHTML = '<div class="guest-empty">Belum ada ucapan yang masuk. Jadilah yang pertama mengirimkan doa terbaik untuk kedua mempelai. 🤍</div>';
     }
 
-    function createGuestCard(item) {
-      const nama = item.nama || "Tamu";
-      const hubungan = item.hubungan || "";
-      const ucapan = item.ucapan || "";
-      const waktu = item.waktu || "";
-
+    function addGuestCard(item, prepend = false) {
       const div = document.createElement("div");
       div.className = "guest-card";
-
-      const initial = (nama || "T").charAt(0).toUpperCase();
-
+      const initial = (item.nama || "?").trim().charAt(0).toUpperCase();
+      const waktu = item.waktu || "";
       div.innerHTML = `
         <div class="guest-card-header">
-          <div class="guest-avatar">${initial}</div>
+          <div class="guest-avatar">${initial || "🤍"}</div>
           <div class="guest-card-meta-wrap">
-            <div class="guest-card-name" title="${nama}">${nama}</div>
+            <div class="guest-card-name">${item.nama || "Tamu"}</div>
             <div class="guest-card-meta">
-              ${hubungan ? hubungan + " · " : ""}${waktu}
+              ${(item.hubungan || "Tamu Undangan")}${waktu ? " • " + waktu : ""}
             </div>
           </div>
         </div>
-        <div class="guest-quote">
-          ${ucapan}
-        </div>
+        <div class="guest-quote">${item.ucapan || ""}</div>
       `;
-      return div;
+      if (prepend && guestListEl.firstChild) {
+        guestListEl.insertBefore(div, guestListEl.firstChild);
+      } else {
+        guestListEl.appendChild(div);
+      }
     }
 
     async function loadGuestbook() {
-      if (!guestListEl) return;
-      guestListEl.innerHTML = "";
-
+      // Kalau URL belum diganti, langsung tampilkan state kosong
       if (
         !SHEET_SCRIPT_URL ||
         SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1
       ) {
-        renderEmptyGuest();
+        renderGuestEmpty();
         return;
       }
 
       try {
-        const res = await fetch(SHEET_SCRIPT_URL + "?type=guestbook_list");
+        const res = await fetch(SHEET_SCRIPT_URL + "?type=guestbook");
         if (!res.ok) throw new Error("HTTP " + res.status);
+
         const data = await res.json();
-        if (!data || !data.length) {
-          renderEmptyGuest();
+
+        // sesuai Apps Script: { entries: [...] }
+        const entries = Array.isArray(data)
+          ? data
+          : Array.isArray(data.entries)
+          ? data.entries
+          : [];
+
+        guestListEl.innerHTML = "";
+
+        if (!entries.length) {
+          renderGuestEmpty();
           return;
         }
 
-        data.forEach((item) => {
-          const card = createGuestCard(item);
-          guestListEl.appendChild(card);
+        entries.forEach((item) => {
+          // item: { nama, hubungan, ucapan, tanggal }
+          addGuestCard(item);
         });
       } catch (err) {
-        console.error("Gagal load guestbook:", err);
-        renderEmptyGuest();
+        console.log("Gagal load guestbook:", err);
+        renderGuestEmpty();
       }
     }
 
-    if (guestForm) {
-      guestForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const nama = document.getElementById("guestName").value.trim();
-        const hubungan = document
-          .getElementById("guestRelation")
-          .value.trim();
-        const ucapan = document
-          .getElementById("guestMessage")
-          .value.trim();
+    document.getElementById("guestForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-        if (!nama || !ucapan) return;
+      const nama = document.getElementById("guestName").value.trim();
+      const hubungan = document.getElementById("guestRelation").value.trim();
+      const ucapan = document.getElementById("guestMessage").value.trim();
 
-        const payload = {
-          type: "guestbook",
-          nama,
-          hubungan,
-          ucapan,
-        };
+      if (!nama || !ucapan) return;
 
-        const btn = this.querySelector('button[type="submit"]');
-        const original = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML =
-          '<span class="icon">⏳</span><span>Mengirim...</span>';
+      const payload = {
+        type: "guestbook",
+        nama,
+        hubungan,
+        ucapan,
+        tanggal: new Date().toISOString() // dikirim ke Apps Script (boleh kosong, AS sudah handle)
+      };
 
-        const smallHint = this.querySelector(".small-hint");
-        if (smallHint) {
-          smallHint.textContent = "Mengirim ucapan...";
-          smallHint.style.color = "#8a6b48";
+      const hint = this.querySelector(".small-hint");
+      if (hint) {
+        hint.style.opacity = "1";
+        hint.textContent = "Mengirim ucapan...";
+      }
+
+      try {
+        const res = await fetch(SHEET_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const data = await res.json().catch(() => ({}));
+
+        // Notifikasi berhasil
+        if (hint) {
+          hint.textContent =
+            data.message || "Ucapan berhasil dikirim. Terima kasih 🤍";
+          setTimeout(() => (hint.style.opacity = "0"), 1800);
         }
 
-        const send = async () => {
+        // Tambahkan ke tampilan list secara real-time
+        addGuestCard(
+          {
+            nama,
+            hubungan,
+            ucapan,
+            tanggal: "Baru saja"
+          },
+          true
+        );
+
+        // Reset form
+        this.reset();
+
+      } catch (err) {
+        console.error("Gagal kirim guestbook:", err);
+        if (hint) {
+          hint.textContent = "Gagal mengirim ucapan. Mohon coba lagi.";
+          hint.style.opacity = "1";
+        }
+      }
+    });
+
+    /* ================== GALLERY LIGHTBOX ================== */
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const lightboxPrev = document.getElementById("lightboxPrev");
+    const lightboxNext = document.getElementById("lightboxNext");
+    const galleryItems = Array.from(document.querySelectorAll(".gallery-item img"));
+    let currentGalleryIndex = 0;
+
+    function openLightbox(index) {
+      if (!galleryItems.length) return;
+      if (index < 0 || index >= galleryItems.length) index = 0;
+      currentGalleryIndex = index;
+      lightboxImg.src = galleryItems[index].src;
+      lightbox.classList.add("open");
+      document.body.classList.add("locked");
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      document.body.classList.remove("locked");
+    }
+
+    function nextGallery(delta) {
+      if (!galleryItems.length) return;
+      currentGalleryIndex = (currentGalleryIndex + delta + galleryItems.length) % galleryItems.length;
+      lightboxImg.src = galleryItems[currentGalleryIndex].src;
+    }
+
+    galleryItems.forEach((img, idx) => {
+      img.parentElement.addEventListener("click", () => openLightbox(idx));
+    });
+
+    if (lightboxClose) {
+      lightboxClose.addEventListener("click", closeLightbox);
+    }
+    if (lightboxPrev) {
+      lightboxPrev.addEventListener("click", () => nextGallery(-1));
+    }
+    if (lightboxNext) {
+      lightboxNext.addEventListener("click", () => nextGallery(1));
+    }
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("open")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowRight") nextGallery(1);
+      if (e.key === "ArrowLeft") nextGallery(-1);
+    });
+
+    /* ================== SHARE ================== */
+    const btnShareNative = document.getElementById("btnShareNative");
+    const btnShareWA = document.getElementById("btnShareWA");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+
+    const shareTitle = "Undangan Pernikahan Nisa & Fadil";
+    const shareText = "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.";
+    const shareUrl = window.location.href;
+
+    if (btnShareNative) {
+      btnShareNative.addEventListener("click", async () => {
+        if (navigator.share) {
           try {
-            if (
-              !SHEET_SCRIPT_URL ||
-              SHEET_SCRIPT_URL.indexOf(
-                "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE"
-              ) !== -1
-            ) {
-              // mode lokal
-            } else {
-              const res = await fetch(SHEET_SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-              });
-              if (!res.ok) throw new Error("HTTP " + res.status);
-            }
-
-            // Tambahkan ke list di atas (prepend)
-            const item = {
-              nama,
-              hubungan,
-              ucapan,
-              waktu: "Baru saja",
-            };
-            const card = createGuestCard(item);
-            if (guestListEl) {
-              if (
-                guestListEl.firstElementChild &&
-                guestListEl.firstElementChild.classList.contains(
-                  "guest-empty"
-                )
-              ) {
-                guestListEl.innerHTML = "";
-              }
-              guestListEl.insertBefore(card, guestListEl.firstChild);
-            }
-
-            this.reset();
-            if (smallHint) {
-              smallHint.textContent =
-                "Terima kasih, ucapan Anda sudah terkirim.";
-              smallHint.style.color = "#1e7e34";
-            }
+            await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
           } catch (err) {
-            console.error("Gagal kirim ucapan:", err);
-            if (smallHint) {
-              smallHint.textContent =
-                "Maaf, terjadi kendala saat mengirim ucapan. Silakan coba lagi.";
-              smallHint.style.color = "#b3261e";
-            }
-          } finally {
-            btn.disabled = false;
-            btn.innerHTML = original;
+            console.log("Share dibatalkan / gagal:", err);
           }
-        };
-
-        send();
+        } else {
+          // fallback copy
+          if (navigator.clipboard) {
+            await navigator.clipboard.writeText(shareUrl);
+            alert("Link undangan sudah disalin.");
+          } else {
+            alert("Silakan salin link undangan langsung dari address bar browser.");
+          }
+        }
       });
     }
 
-    // =========================================
-    //              GALERY LIGHTBOX
-    // =========================================
-    (function initLightbox() {
-      const lightbox = document.getElementById("lightbox");
-      const lightboxImg = document.getElementById("lightboxImg");
-      const btnClose = document.getElementById("lightboxClose");
-      const btnPrev = document.getElementById("lightboxPrev");
-      const btnNext = document.getElementById("lightboxNext");
-
-      const galleryItems = Array.from(
-        document.querySelectorAll("#gallery .gallery-item img")
-      );
-      if (!lightbox || !lightboxImg || !galleryItems.length) return;
-
-      let currentIndex = 0;
-
-      function openLightbox(index) {
-        currentIndex = index;
-        const img = galleryItems[currentIndex];
-        if (!img) return;
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt || "Preview Foto";
-        lightbox.classList.add("open");
-        document.body.classList.add("locked");
-      }
-
-      function closeLightbox() {
-        lightbox.classList.remove("open");
-        document.body.classList.remove("locked");
-        lightboxImg.src = "";
-      }
-
-      function showNext(step) {
-        const total = galleryItems.length;
-        currentIndex = (currentIndex + step + total) % total;
-        const img = galleryItems[currentIndex];
-        if (!img) return;
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt || "Preview Foto";
-      }
-
-      galleryItems.forEach((img, index) => {
-        img.parentElement.addEventListener("click", () => openLightbox(index));
+    if (btnShareWA) {
+      btnShareWA.addEventListener("click", () => {
+        const text = encodeURIComponent(
+          "Assalamu'alaikum,\n\n" +
+          "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan Nisa & Fadil.\n\n" +
+          "Berikut link undangan lengkapnya:\n" + shareUrl + "\n\n" +
+          "Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
+        );
+        const waUrl = "https://wa.me/?text=" + text;
+        window.open(waUrl, "_blank");
       });
+    }
 
-      btnClose.addEventListener("click", closeLightbox);
-      btnPrev.addEventListener("click", () => showNext(-1));
-      btnNext.addEventListener("click", () => showNext(1));
-
-      // Tutup jika klik area gelap di luar foto
-      lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox) {
-          closeLightbox();
-        }
-      });
-
-      // Keyboard: ESC & panah
-      document.addEventListener("keydown", (e) => {
-        if (!lightbox.classList.contains("open")) return;
-        if (e.key === "Escape") closeLightbox();
-        if (e.key === "ArrowRight") showNext(1);
-        if (e.key === "ArrowLeft") showNext(-1);
-      });
-    })();
-
-    // =========================================
-    //              SHARE SECTION
-    // =========================================
-    (function initShare() {
-      const btnShareNative = document.getElementById("btnShareNative");
-      const btnShareWA = document.getElementById("btnShareWA");
-      const btnCopyLink = document.getElementById("btnCopyLink");
-      const currentUrl = window.location.href.split("#")[0];
-
-      if (btnShareNative) {
-        btnShareNative.addEventListener("click", async () => {
-          const shareData = {
-            title: "Undangan Pernikahan Nisa & Fadil",
-            text:
-              "Assalamu'alaikum, berikut undangan pernikahan Nisa & Fadil. Kami sangat mengharapkan doa dan kehadiran Anda.",
-            url: currentUrl,
-          };
-          if (navigator.share) {
-            try {
-              await navigator.share(shareData);
-            } catch (err) {
-              console.log("Share dibatalkan:", err);
-            }
-          } else {
-            alert(
-              "Fitur share belum didukung di perangkat ini. Silakan gunakan tombol WhatsApp atau Copy Link."
-            );
-          }
-        });
-      }
-
-      if (btnShareWA) {
-        btnShareWA.addEventListener("click", () => {
-          const text =
-            "Assalamu'alaikum, berikut undangan pernikahan Nisa & Fadil:\n\n" +
-            currentUrl +
-            "\n\nKami sangat mengharapkan doa dan kehadiran Anda.";
-          const waUrl =
-            "https://wa.me/?text=" + encodeURIComponent(text);
-          window.open(waUrl, "_blank");
-        });
-      }
-
-      if (btnCopyLink) {
-        btnCopyLink.addEventListener("click", () => {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(currentUrl);
+    if (btnCopyLink) {
+      btnCopyLink.addEventListener("click", async () => {
+        try {
+          if (navigator.clipboard) {
+            await navigator.clipboard.writeText(shareUrl);
+            alert("Link undangan berhasil disalin.");
           } else {
             const temp = document.createElement("textarea");
-            temp.value = currentUrl;
+            temp.value = shareUrl;
             document.body.appendChild(temp);
             temp.select();
             document.execCommand("copy");
             document.body.removeChild(temp);
+            alert("Link undangan berhasil disalin.");
           }
+        } catch (err) {
+          alert("Gagal menyalin link. Silakan salin langsung dari address bar.");
+        }
+      });
+    }
 
-          const original = btnCopyLink.innerHTML;
-          btnCopyLink.innerHTML =
-            '<span>✅</span><span>Link Tersalin</span>';
-          setTimeout(() => {
-            btnCopyLink.innerHTML = original;
-          }, 1500);
-        });
-      }
-    })();
-
-    // Load data awal
-    loadRsvpSummaryFromServer();
-    loadGuestbook();
+    // Inisialisasi data dari server setelah DOM siap
+    document.addEventListener("DOMContentLoaded", () => {
+      loadRsvpSummaryFromServer();
+      loadGuestbook();
+    });
   </script>
 </body>
 </html>
