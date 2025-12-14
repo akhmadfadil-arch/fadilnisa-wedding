@@ -135,7 +135,7 @@ section {
     justify-content: center;
     background:
     linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.9)),
-    url("img/awal.jpg") center center / cover no-repeat;
+    url("img/bg-hero.jpeg") center center / cover no-repeat;
 }
 
 #coverInner {
