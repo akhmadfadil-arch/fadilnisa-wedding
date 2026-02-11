@@ -6,15 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Undangan pernikahan Dwi Unzila Putri &amp; Ahmad Bakri - Minggu, 29 Maret 2026 di Gedung Diamond, Kec. Girimaya, Kota Pangkal Pinang, Kepulauan Bangka Belitung.">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <!-- Preload Critical Assets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  
+  <!-- Optimized Font Loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
   
 </head>
 <body class="locked">
 
-  <!-- Musik -->
-  <audio id="bgm" loop preload="auto">
+  <!-- Musik (lazy load) -->
+  <audio id="bgm" loop preload="metadata">
     <source src="bergema.mp3" type="audio/mpeg">
   </audio>
 
@@ -123,14 +129,14 @@
 
         <div class="hero-right">
           <div class="hero-photo-main reveal">
-            <img src="foto/galeri/ZAR03742.jpg" alt="Dwi Unzila Putri &amp; Ahmad Bakri" />
+            <img src="foto/galeri/ZAR03742.jpg" alt="Dwi Unzila Putri &amp; Ahmad Bakri" loading="lazy" />
           </div>
           <div class="hero-mini-row">
             <div class="hero-mini reveal">
-              <img src="foto/cpw.jpg" alt="Mempelai Wanita" />
+              <img src="foto/cpw.jpg" alt="Mempelai Wanita" loading="lazy" />
             </div>
             <div class="hero-mini reveal">
-              <img src="foto/cpp.jpg" alt="Mempelai Pria" />
+              <img src="foto/cpp.jpg" alt="Mempelai Pria" loading="lazy" />
             </div>
           </div>
 
@@ -189,7 +195,7 @@
           <div class="person-card reveal hover-rise">
             <div class="person-inner">
               <div class="person-photo">
-                <img src="foto/cpw.jpg" alt="Dwi Unzila Putri" />
+                <img src="foto/cpw.jpg" alt="Dwi Unzila Putri" loading="lazy" />
               </div>
               <div class="person-role">Mempelai Wanita</div>
               <div class="person-name">Dwi Unzila Putri, A. Md. Stat.</div>
@@ -207,7 +213,7 @@
           <div class="person-card reveal hover-rise">
             <div class="person-inner">
               <div class="person-photo">
-                <img src="foto/cpp.jpg" alt="Ahmad Bakri" />
+                <img src="foto/cpp.jpg" alt="Ahmad Bakri" loading="lazy" />
               </div>
               <div class="person-role">Mempelai Pria</div>
               <div class="person-name">Ahmad Bakri, A. Md. Stat.</div>
@@ -256,7 +262,7 @@
               <!-- Slide 1 -->
               <article class="story-slide active" data-index="0">
                 <div class="story-photo-frame">
-                  <img src="foto/galeri/ZAR03652.jpg" alt="Awal Mula - Masa Kuliah" />
+                  <img src="foto/galeri/ZAR03652.jpg" alt="Awal Mula - Masa Kuliah" loading="lazy" />
                   <div class="story-photo-tag">
                     <span>01</span><span>Awal Mula</span>
                   </div>
@@ -280,7 +286,7 @@
               <!-- Slide 2 -->
               <article class="story-slide" data-index="1">
                 <div class="story-photo-frame">
-                  <img src="foto/galeri/ZAR03714.jpg" alt="Pertemuan di Kantor" />
+                  <img src="foto/galeri/ZAR03714.jpg" alt="Pertemuan di Kantor" loading="lazy" />
                   <div class="story-photo-tag">
                     <span>02</span><span>Pertemuan</span>
                   </div>
@@ -305,7 +311,7 @@
               <!-- Slide 3 -->
               <article class="story-slide" data-index="2">
                 <div class="story-photo-frame">
-                  <img src="foto/galeri/ZAR03719.jpg" alt="Perjalanan Kasih" />
+                  <img src="foto/galeri/ZAR03719.jpg" alt="Perjalanan Kasih" loading="lazy" />
                   <div class="story-photo-tag">
                     <span>03</span><span>Perjalanan Kasih</span>
                   </div>
@@ -331,7 +337,7 @@
               <!-- Slide 4 -->
               <article class="story-slide" data-index="3">
                 <div class="story-photo-frame">
-                  <img src="foto/galeri/ZAR03742.jpg" alt="Momen Lamaran" />
+                  <img src="foto/galeri/ZAR03742.jpg" alt="Momen Lamaran" loading="lazy" />
                   <div class="story-photo-tag">
                     <span>04</span><span>Lamaran</span>
                   </div>
@@ -356,7 +362,7 @@
               <!-- Slide 5 -->
               <article class="story-slide" data-index="4">
                 <div class="story-photo-frame">
-                  <img src="foto/galeri/ZAR03825.jpg" alt="Menuju Hari Bahagia" />
+                  <img src="foto/galeri/ZAR03825.jpg" alt="Menuju Hari Bahagia" loading="lazy" />
                   <div class="story-photo-tag">
                     <span>05</span><span>Hari Bahagia</span>
                   </div>
@@ -514,8 +520,7 @@
               referrerpolicy="no-referrer-when-downgrade"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.3242644906006!2d106.1044291!3d-2.1066667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e22c725489f3419%3A0x97185927705aa556!2sGedung%20Diamond%20Terminal%20Girimaya%2C%20Bukitbesar%2C%20Girimaya%2C%20Pangkal%20Pinang!5e0!3m2!1sid!2sid!4v1707615873000"
               allowfullscreen=""
-              style="border:0;"
-              referrerpolicy="no-referrer-when-downgrade">
+              style="border:0;" title="Google Maps - Gedung Diamond">
             </iframe>
           </div>
           <div class="map-card-footer">
@@ -811,31 +816,31 @@
         <div class="section-divider"></div>
 
         <div class="gallery-grid">
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03652.jpg" alt="Gallery 1"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03714.jpg" alt="Gallery 2"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03719.jpg" alt="Gallery 3"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03742.jpg" alt="Gallery 4"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03825.jpg" alt="Gallery 5"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03829.jpg" alt="Gallery 6"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03841.jpg" alt="Gallery 7"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03926.jpg" alt="Gallery 8"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03932.jpg" alt="Gallery 9"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03951.jpg" alt="Gallery 10"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03995.jpg" alt="Gallery 11"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2625.jpg" alt="Gallery 12"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2647.jpg" alt="Gallery 13"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2701.jpg" alt="Gallery 14"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2715.jpg" alt="Gallery 15"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2726.jpg" alt="Gallery 16"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2732.jpg" alt="Gallery 17"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2781.jpg" alt="Gallery 18"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2816.jpg" alt="Gallery 19"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2984.jpg" alt="Gallery 20"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3001.jpg" alt="Gallery 21"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3025.jpg" alt="Gallery 22"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3040.jpg" alt="Gallery 23"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3191.jpg" alt="Gallery 24"></figure>
-          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3246.jpg" alt="Gallery 25"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03652.jpg" alt="Gallery 1" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03714.jpg" alt="Gallery 2" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03719.jpg" alt="Gallery 3" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03742.jpg" alt="Gallery 4" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03825.jpg" alt="Gallery 5" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03829.jpg" alt="Gallery 6" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03841.jpg" alt="Gallery 7" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03926.jpg" alt="Gallery 8" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03932.jpg" alt="Gallery 9" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03951.jpg" alt="Gallery 10" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/ZAR03995.jpg" alt="Gallery 11" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2625.jpg" alt="Gallery 12" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2647.jpg" alt="Gallery 13" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2701.jpg" alt="Gallery 14" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2715.jpg" alt="Gallery 15" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2726.jpg" alt="Gallery 16" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2732.jpg" alt="Gallery 17" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2781.jpg" alt="Gallery 18" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2816.jpg" alt="Gallery 19" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR2984.jpg" alt="Gallery 20" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3001.jpg" alt="Gallery 21" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3025.jpg" alt="Gallery 22" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3040.jpg" alt="Gallery 23" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3191.jpg" alt="Gallery 24" loading="lazy"></figure>
+          <figure class="gallery-item reveal hover-rise"><img src="foto/galeri/_ZAR3246.jpg" alt="Gallery 25" loading="lazy"></figure>
         </div>
       </div>
     </section>
@@ -920,7 +925,7 @@
   </footer>
   <script type="module" src="script.js"></script>
 
-  <!-- Vercel Speed Insights -->
+  <!-- Analytics - Load after page content -->
   <script defer src="https://cdn.vercel-analytics.com/v1/speed-insights/script.js"></script>
 </body>
 </html>

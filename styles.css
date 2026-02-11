@@ -2406,3 +2406,51 @@ footer {
     left: -15px;
     }
 }
+
+/* ==================== PERFORMANCE OPTIMIZATIONS ==================== */
+/* Optimize animations with GPU acceleration */
+.story-slide,
+.gallery-item,
+.person-card,
+.event-card,
+.card-soft {
+    contain: layout style paint;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Optimize reveal animations */
+.reveal {
+    will-change: opacity, transform;
+}
+
+.reveal.show {
+    will-change: auto;
+}
+
+/* Optimize hover effects */
+.hover-rise:hover {
+    will-change: transform;
+}
+
+/* Optimize lightbox */
+#lightbox {
+    will-change: opacity;
+}
+
+#lightbox.open {
+    will-change: auto;
+}
+
+/* Optimize scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Font smoothing */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /.vercel/
+Disallow: /node_modules/
+Disallow: /*.env*
+
+Sitemap: /sitemap.xml

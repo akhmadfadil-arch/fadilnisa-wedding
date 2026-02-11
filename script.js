@@ -14,9 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-console.log("🔥 Firebase App initialized successfully!");
-console.log("🔥 Firestore Database connected to project:", firebaseConfig.projectId);
-
 // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT (jika tidak digunakan, abaikan)
 const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZa2BeDatvUkt2PXDTzkAbX8QH3ItbjLdR99BIIBhgER-KU2-cYyla03mybuDCbFYj/exec";
 
@@ -371,7 +368,6 @@ function renderRsvpSummary() {
 
 async function loadRsvpSummaryFromServer() {
     try {
-        console.log("📊 Loading RSVP summary dari Firestore...");
         const q = query(collection(db, "entries"), where("type", "==", "rsvp"));
         const snapshot = await getDocs(q);
         
@@ -387,10 +383,9 @@ async function loadRsvpSummaryFromServer() {
             else if (data.status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += jumlah;
         });
         
-        console.log(`✅ RSVP Summary dari Firestore: Hadir=${rsvpSummary.hadir}, Belum=${rsvpSummary.belum}, Tidak=${rsvpSummary.tidak}`);
         renderRsvpSummary();
     } catch (err) {
-        console.error("❌ Gagal load RSVP summary dari Firestore:", err);
+        console.error("❌ Gagal load RSVP summary:", err.message);
         renderRsvpSummary();
     }
 }
@@ -409,7 +404,6 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
 
     try {
         // Save to Firestore (PRIMARY source)
-        console.log("📝 Saving RSVP entry to Firestore...");
         await addDoc(collection(db, "entries"), {
             type: "rsvp",
             nama: name,
@@ -419,8 +413,6 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
             ucapan: msg,
             createdAt: new Date().toISOString()
         });
-
-        console.log("✅ RSVP entry saved to Firestore!");
 
         statusMsg.textContent = "RSVP berhasil dikirim. Terima kasih 🙏";
 
@@ -433,7 +425,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
 
         this.reset();
     } catch (err) {
-        console.error("❌ Gagal kirim RSVP ke Firestore:", err);
+        console.error("❌ Gagal kirim RSVP:", err.message);
         statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
     }
 });
@@ -486,7 +478,6 @@ function addGuestCard(item, prepend = false) {
 
 async function loadGuestbook() {
     try {
-        console.log("📚 Loading guestbook dari Firestore...");
         
         // Query ALL entries ordered by createdAt (terbaru dulu)
         const qAllEntries = query(
@@ -514,12 +505,9 @@ async function loadGuestbook() {
             }
         });
         
-        console.log(`🎯 Total ucapan dari Firestore (setelah filter): ${allEntries.length}`);
-        
         guestListEl.innerHTML = "";
         
         if (!allEntries.length) {
-            console.log("⚠️ Tidak ada ucapan di Firestore. Menampilkan pesan kosong.");
             renderGuestEmpty();
             return;
         }
@@ -533,11 +521,8 @@ async function loadGuestbook() {
             });
         });
         
-        console.log("✅ Guestbook berhasil diload dari Firestore!");
     } catch (err) {
-        console.error("❌ Gagal load guestbook dari Firestore:", err);
-        console.error("Error message:", err.message);
-        console.error("Error code:", err.code);
+        console.error("❌ Gagal load guestbook:", err.message);
         renderGuestEmpty();
     }
 }
@@ -561,7 +546,6 @@ if (guestFormEl) {
 
         try {
             // Save to Firestore (PRIMARY - only source)
-            console.log("📝 Saving guestbook entry to Firestore...");
             await addDoc(collection(db, "entries"), {
                 type: "guestbook",
                 nama,
@@ -569,8 +553,6 @@ if (guestFormEl) {
                 ucapan,
                 createdAt: new Date().toISOString()
             });
-
-            console.log("✅ Guestbook entry saved to Firestore!");
 
             if (hint) {
                 hint.textContent = "Ucapan berhasil dikirim. Terima kasih 🤍";
@@ -590,7 +572,7 @@ if (guestFormEl) {
             this.reset();
 
         } catch (err) {
-            console.error("❌ Gagal kirim guestbook ke Firestore:", err);
+            console.error("❌ Gagal kirim guestbook:", err.message);
             if (hint) {
                 hint.textContent = "Gagal mengirim ucapan. Mohon coba lagi.";
                 hint.style.opacity = "1";
@@ -721,8 +703,19 @@ if (btnCopyLink) {
     });
 }
 
-// Inisialisasi data dari server setelah DOM siap
+// Inisialisasi data dari server setelah DOM siap dan page fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-    loadRsvpSummaryFromServer();
-    loadGuestbook();
+    // Defer Firebase data loading to idle time
+    if (typeof requestIdleCallback !== "undefined") {
+        requestIdleCallback(() => {
+            loadRsvpSummaryFromServer();
+            loadGuestbook();
+        });
+    } else {
+        // Fallback for browsers without requestIdleCallback
+        setTimeout(() => {
+            loadRsvpSummaryFromServer();
+            loadGuestbook();
+        }, 1000);
+    }
 });

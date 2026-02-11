@@ -1,5 +1,8 @@
 node_modules
 .git
 .vscode
-FIRESTORE_SETUP.md
 *.md
+.env*
+*.log
+.gitignore
+
