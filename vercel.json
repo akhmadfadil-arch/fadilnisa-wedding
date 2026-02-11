@@ -1,26 +1,31 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": ".",
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server.js"
+      "src": "/foto/(.*)",
+      "dest": "/foto/$1"
+    },
+    {
+      "src": "/img/(.*)",
+      "dest": "/img/$1"
+    },
+    {
+      "src": ".*\\.js$",
+      "dest": "$0"
+    },
+    {
+      "src": ".*\\.css$",
+      "dest": "$0"
+    },
+    {
+      "src": ".*\\.mp3$",
+      "dest": "$0"
     },
     {
       "src": "/(.*)",
-      "dest": "index.html"
+      "dest": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
