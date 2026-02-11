@@ -1,4 +1,23 @@
-// GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT
+/* ================== FIRESTORE INITIALIZATION ================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBMKbQ7c7s_4aoDz0yAnoKSk2zOS04zEx0",
+    authDomain: "undangan-f9f5c.firebaseapp.com",
+    projectId: "undangan-f9f5c",
+    storageBucket: "undangan-f9f5c.firebasestorage.app",
+    messagingSenderId: "1028126764516",
+    appId: "1:1028126764516:web:804bbb0264c46f6dc9abf1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+console.log("🔥 Firebase App initialized successfully!");
+console.log("🔥 Firestore Database connected to project:", firebaseConfig.projectId);
+
+// GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT (jika tidak digunakan, abaikan)
 const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZa2BeDatvUkt2PXDTzkAbX8QH3ItbjLdR99BIIBhgER-KU2-cYyla03mybuDCbFYj/exec";
 
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -88,7 +107,7 @@ if ("IntersectionObserver" in window) {
 
 // Countdown
 (function initCountdown() {
-    const targetDate = new Date("2025-12-28T07:30:00+07:00");
+    const targetDate = new Date("2026-03-29T08:00:00+07:00");
     const daysEl = document.getElementById("cd-days");
     const hoursEl = document.getElementById("cd-hours");
     const minutesEl = document.getElementById("cd-minutes");
@@ -351,21 +370,29 @@ function renderRsvpSummary() {
 }
 
 async function loadRsvpSummaryFromServer() {
-    if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1) {
-    renderRsvpSummary();
-    return;
-    }
     try {
-    const res = await fetch(SHEET_SCRIPT_URL + "?type=rsvp_stats");
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    rsvpSummary.hadir = parseInt(data.hadir || 0, 10) || 0;
-    rsvpSummary.belum = parseInt(data.belum || 0, 10) || 0;
-    rsvpSummary.tidak = parseInt(data.tidak || 0, 10) || 0;
+        console.log("📊 Loading RSVP summary dari Firestore...");
+        const q = query(collection(db, "entries"), where("type", "==", "rsvp"));
+        const snapshot = await getDocs(q);
+        
+        rsvpSummary.hadir = 0;
+        rsvpSummary.belum = 0;
+        rsvpSummary.tidak = 0;
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const jumlah = parseInt(data.jumlah || 1, 10);
+            if (data.status === "Insya Allah Hadir") rsvpSummary.hadir += jumlah;
+            else if (data.status === "Belum Pasti") rsvpSummary.belum += jumlah;
+            else if (data.status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += jumlah;
+        });
+        
+        console.log(`✅ RSVP Summary dari Firestore: Hadir=${rsvpSummary.hadir}, Belum=${rsvpSummary.belum}, Tidak=${rsvpSummary.tidak}`);
+        renderRsvpSummary();
     } catch (err) {
-    console.log("Gagal load rekap RSVP dari server:", err);
+        console.error("❌ Gagal load RSVP summary dari Firestore:", err);
+        renderRsvpSummary();
     }
-    renderRsvpSummary();
 }
 
 document.getElementById("rsvpForm").addEventListener("submit", async function (e) {
@@ -378,50 +405,56 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
     const statusMsg = document.getElementById("rsvpStatusMsg");
     if (!name) return;
 
-    const payload = {
-    type: "rsvp",
-    nama: name,
-    whatsapp: phone,
-    status: status,
-    jumlah: guests,
-    ucapan: msg,
-    };
-
     statusMsg.textContent = "Mengirim data RSVP.";
 
     try {
-    // Kirim sebagai x-www-form-urlencoded + no-cors (fire & forget)
-    const formBody = new URLSearchParams(payload).toString();
+        // Save to Firestore (PRIMARY source)
+        console.log("📝 Saving RSVP entry to Firestore...");
+        await addDoc(collection(db, "entries"), {
+            type: "rsvp",
+            nama: name,
+            whatsapp: phone,
+            status: status,
+            jumlah: parseInt(guests, 10),
+            ucapan: msg,
+            createdAt: new Date().toISOString()
+        });
 
-    await fetch(SHEET_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        },
-        body: formBody,
-    });
+        console.log("✅ RSVP entry saved to Firestore!");
 
-    // Karena mode: "no-cors", kita TIDAK bisa baca res.json().
-    // Tapi request tetap terkirim ke Apps Script.
+        statusMsg.textContent = "RSVP berhasil dikirim. Terima kasih 🙏";
 
-    statusMsg.textContent = "RSVP berhasil dikirim. Terima kasih 🙏";
+        // Update ringkas lokal - tambahkan berdasarkan jumlah tamu
+        const guestCount = parseInt(guests, 10);
+        if (status === "Insya Allah Hadir") rsvpSummary.hadir += guestCount;
+        else if (status === "Belum Pasti") rsvpSummary.belum += guestCount;
+        else if (status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += guestCount;
+        renderRsvpSummary();
 
-    // update ringkas lokal
-    if (status === "Insya Allah Hadir") rsvpSummary.hadir += 1;
-    else if (status === "Belum Pasti") rsvpSummary.belum += 1;
-    else if (status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += 1;
-    renderRsvpSummary();
-
-    this.reset();
+        this.reset();
     } catch (err) {
-    console.log("Gagal kirim RSVP:", err);
-    statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
+        console.error("❌ Gagal kirim RSVP ke Firestore:", err);
+        statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
     }
 });
 
 /* ================== GUESTBOOK ================== */
 const guestListEl = document.getElementById("guestList");
+
+function formatDate(isoString) {
+    if (!isoString) return "";
+    
+    const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    
+    const date = new Date(isoString);
+    const dayName = days[date.getUTCDay()];
+    const dayNum = date.getUTCDate();
+    const monthName = months[date.getUTCMonth()];
+    const year = date.getUTCFullYear();
+    
+    return `${dayName}, ${dayNum} ${monthName} ${year}`;
+}
 
 function renderGuestEmpty() {
     guestListEl.innerHTML = '<div class="guest-empty">Belum ada ucapan yang masuk. Jadilah yang pertama mengirimkan doa terbaik untuk kedua mempelai. 🤍</div>';
@@ -431,7 +464,7 @@ function addGuestCard(item, prepend = false) {
     const div = document.createElement("div");
     div.className = "guest-card";
     const initial = (item.nama || "?").trim().charAt(0).toUpperCase();
-    const waktu = item.waktu || "";
+    const waktu = item.waktu ? formatDate(item.waktu) : "";
     div.innerHTML = `
     <div class="guest-card-header">
         <div class="guest-avatar">${initial || "🤍"}</div>
@@ -452,106 +485,119 @@ function addGuestCard(item, prepend = false) {
 }
 
 async function loadGuestbook() {
-    // Kalau URL belum diganti, langsung tampilkan state kosong
-    if (
-    !SHEET_SCRIPT_URL ||
-    SHEET_SCRIPT_URL.indexOf("PASTE_APPS_SCRIPT_WEB_APP_URL_HERE") !== -1
-    ) {
-    renderGuestEmpty();
-    return;
-    }
-
     try {
-    const res = await fetch(SHEET_SCRIPT_URL + "?type=guestbook");
-    if (!res.ok) throw new Error("HTTP " + res.status);
-
-    const data = await res.json();
-
-    // sesuai Apps Script: { entries: [...] }
-    const entries = Array.isArray(data)
-        ? data
-        : Array.isArray(data.entries)
-        ? data.entries
-        : [];
-
-    guestListEl.innerHTML = "";
-
-    if (!entries.length) {
-        renderGuestEmpty();
-        return;
-    }
-
-    entries.forEach((item) => {
-        // item: { nama, hubungan, ucapan, tanggal }
-        addGuestCard(item);
-    });
+        console.log("📚 Loading guestbook dari Firestore...");
+        
+        // Query ALL entries ordered by createdAt (terbaru dulu)
+        const qAllEntries = query(
+            collection(db, "entries"),
+            orderBy("createdAt", "desc")
+        );
+        
+        const snapshot = await getDocs(qAllEntries);
+        console.log(`✅ Total entries dari Firestore: ${snapshot.size}`);
+        
+        // Filter entries yang punya ucapan
+        let allEntries = [];
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            // Ambil semua yang punya field ucapan dan tidak kosong
+            if (data.ucapan && data.ucapan.trim()) {
+                allEntries.push({
+                    nama: data.nama || "Tamu",
+                    hubungan: data.hubungan || "Tamu Undangan",
+                    ucapan: data.ucapan,
+                    waktu: data.createdAt || "",
+                    createdAt: new Date(data.createdAt || 0).getTime()
+                });
+            }
+        });
+        
+        console.log(`🎯 Total ucapan dari Firestore (setelah filter): ${allEntries.length}`);
+        
+        guestListEl.innerHTML = "";
+        
+        if (!allEntries.length) {
+            console.log("⚠️ Tidak ada ucapan di Firestore. Menampilkan pesan kosong.");
+            renderGuestEmpty();
+            return;
+        }
+        
+        allEntries.forEach(entry => {
+            addGuestCard({
+                nama: entry.nama,
+                hubungan: entry.hubungan,
+                ucapan: entry.ucapan,
+                waktu: entry.waktu
+            });
+        });
+        
+        console.log("✅ Guestbook berhasil diload dari Firestore!");
     } catch (err) {
-    console.log("Gagal load guestbook:", err);
-    renderGuestEmpty();
+        console.error("❌ Gagal load guestbook dari Firestore:", err);
+        console.error("Error message:", err.message);
+        console.error("Error code:", err.code);
+        renderGuestEmpty();
     }
 }
 
-document.getElementById("guestForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
+const guestFormEl = document.getElementById("guestForm");
+if (guestFormEl) {
+    guestFormEl.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    const nama = document.getElementById("guestName").value.trim();
-    const hubungan = document.getElementById("guestRelation").value.trim();
-    const ucapan = document.getElementById("guestMessage").value.trim();
+        const nama = document.getElementById("guestName").value.trim();
+        const hubungan = document.getElementById("guestRelation").value.trim();
+        const ucapan = document.getElementById("guestMessage").value.trim();
 
-    if (!nama || !ucapan) return;
+        if (!nama || !ucapan) return;
 
-    const payload = {
-    type: "guestbook",
-    nama,
-    hubungan,
-    ucapan,
-    tanggal: new Date().toISOString() // dikirim ke Apps Script (boleh kosong, AS sudah handle)
-    };
+        const hint = this.querySelector(".small-hint");
+        if (hint) {
+            hint.style.opacity = "1";
+            hint.textContent = "Mengirim ucapan...";
+        }
 
-    const hint = this.querySelector(".small-hint");
-    if (hint) {
-    hint.style.opacity = "1";
-    hint.textContent = "Mengirim ucapan...";
-    }
+        try {
+            // Save to Firestore (PRIMARY - only source)
+            console.log("📝 Saving guestbook entry to Firestore...");
+            await addDoc(collection(db, "entries"), {
+                type: "guestbook",
+                nama,
+                hubungan,
+                ucapan,
+                createdAt: new Date().toISOString()
+            });
 
-    try {
-    const formBody = new URLSearchParams(payload).toString();
+            console.log("✅ Guestbook entry saved to Firestore!");
 
-    await fetch(SHEET_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        },
-        body: formBody,
+            if (hint) {
+                hint.textContent = "Ucapan berhasil dikirim. Terima kasih 🤍";
+                setTimeout(() => (hint.style.opacity = "0"), 1800);
+            }
+
+            addGuestCard(
+                {
+                    nama,
+                    hubungan,
+                    ucapan,
+                    waktu: "Baru saja"
+                },
+                true
+            );
+
+            this.reset();
+
+        } catch (err) {
+            console.error("❌ Gagal kirim guestbook ke Firestore:", err);
+            if (hint) {
+                hint.textContent = "Gagal mengirim ucapan. Mohon coba lagi.";
+                hint.style.opacity = "1";
+            }
+        }
     });
-
-    // Tidak bisa baca res.json(), tapi data terkirim.
-
-    if (hint) {
-        hint.textContent = "Ucapan berhasil dikirim. Terima kasih 🤍";
-        setTimeout(() => (hint.style.opacity = "0"), 1800);
-    }
-
-    addGuestCard(
-        {
-        nama,
-        hubungan,
-        ucapan,
-        tanggal: "Baru saja"
-        },
-        true
-    );
-
-    this.reset();
-    } catch (err) {
-    console.error("Gagal kirim guestbook:", err);
-    if (hint) {
-        hint.textContent = "Gagal mengirim ucapan. Mohon coba lagi.";
-        hint.style.opacity = "1";
-    }
-    }
-});
+}
 
 /* ================== GALLERY LIGHTBOX ================== */
 const lightbox = document.getElementById("lightbox");
@@ -612,8 +658,8 @@ const btnShareNative = document.getElementById("btnShareNative");
 const btnShareWA = document.getElementById("btnShareWA");
 const btnCopyLink = document.getElementById("btnCopyLink");
 
-const shareTitle = "Undangan Pernikahan Nisa & Fadil";
-const shareText = "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.";
+const shareTitle = "Undangan Pernikahan Dwi Unzila Putri & Ahmad Bakri";
+const shareText = "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan Dwi Unzila Putri & Ahmad Bakri pada Minggu, 29 Maret 2026 (Akad: 08.00 WIB, Resepsi: 10.00 WIB) di Gedung Diamond, Kota Pangkal Pinang.";
 const shareUrl = window.location.href;
 
 if (btnShareNative) {
@@ -640,9 +686,14 @@ if (btnShareWA) {
     btnShareWA.addEventListener("click", () => {
     const text = encodeURIComponent(
         "Assalamu'alaikum,\n\n" +
-        "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan Nisa & Fadil.\n\n" +
-        "Berikut link undangan lengkapnya:\n" + shareUrl + "\n\n" +
-        "Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
+        "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan Dwi Unzila Putri & Ahmad Bakri.\n\n" +
+        "Hari/Tanggal: Minggu, 29 Maret 2026\n" +
+        "Akad: 08.00 WIB\n" +
+        "Resepsi: 10.00 - 13.00 WIB\n" +
+        "Tempat: Gedung Diamond, Kec. Girimaya, Kota Pangkal Pinang\n\n" +
+        "Link undangan lengkap:\n" + shareUrl + "\n\n" +
+        "Mohon konfirmasi kehadiran melalui fitur RSVP di halaman undangan ini.\n\n" +
+        "Terima kasih atas doa dan dukungan Anda."
     );
     const waUrl = "https://wa.me/?text=" + text;
     window.open(waUrl, "_blank");
