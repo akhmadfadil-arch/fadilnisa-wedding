@@ -923,7 +923,38 @@
       <span>⬆</span><span>Kembali ke Atas</span>
     </div>
   </footer>
-  <script type="module" src="script.js"></script>
+  <!-- Dynamic module loader + Service Worker registration -->
+  <script>
+    // Register service worker (non-blocking)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+    }
+
+    // Load main module during idle or after first interaction
+    const loadMainModule = () => {
+      try {
+        import('/script.js');
+      } catch (e) {
+        // dynamic import may fail on some older setups; fallback to adding script tag
+        const s = document.createElement('script');
+        s.type = 'module';
+        s.src = '/script.js';
+        document.body.appendChild(s);
+      }
+    };
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadMainModule, { timeout: 2000 });
+    } else {
+      // load after short delay if no idle callback
+      setTimeout(loadMainModule, 2000);
+    }
+
+    // Also trigger load on first user interaction to improve perceived responsiveness
+    ['click', 'scroll', 'touchstart', 'keydown'].forEach((ev) =>
+      window.addEventListener(ev, loadMainModule, { once: true, passive: true })
+    );
+  </script>
 
   <!-- Analytics - Load after page content -->
   <script defer src="https://cdn.vercel-analytics.com/v1/speed-insights/script.js"></script>
