@@ -14,9 +14,7 @@
 
 body {
     font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background:
-    radial-gradient(circle at top, #fdf3e4 0, #f7f2ea 38%, #f2e7db 100%),
-    url("img/bg-pattern.png") center/320px repeat;
+    background: radial-gradient(circle at top, #fdf3e4 0, #f7f2ea 38%, #f2e7db 100%);
     color: var(--text);
     line-height: 1.6;
     scroll-behavior: smooth;
@@ -145,8 +143,7 @@ section {
     border-radius: 26px;
     padding: 2.1rem 1.6rem 1.8rem;
     background:
-    radial-gradient(circle at top left, rgba(255,255,255,0.24), rgba(24,16,10,0.8)),
-    url("img/bg-pattern.png") center/260px repeat;
+    radial-gradient(circle at top left, rgba(255,255,255,0.24), rgba(24,16,10,0.8));
     border: 1px solid rgba(255,255,255,0.6);
     color: #fff;
     text-align: center;
