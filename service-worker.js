@@ -1,14 +1,15 @@
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const PRECACHE = `precache-${CACHE_VERSION}`;
 const RUNTIME = `runtime-${CACHE_VERSION}`;
 
-// A small list of core assets to precache. Keep minimal to avoid large SW size.
+// Core assets to precache (minified production versions)
 const PRECACHE_URLS = [
   '/',
   '/index.html',
-  '/styles.css',
+  '/styles.min.css',
+  '/script.min.js',
   '/manifest.json',
-  '/favicon.ico'
+  '/robots.txt'
 ];
 
 self.addEventListener('install', (event) => {
