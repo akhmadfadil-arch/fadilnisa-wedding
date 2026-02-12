@@ -2113,6 +2113,104 @@ body.unlocked #page {
     margin-left: 0.02rem;
 }
 
+/* LIVE STREAMING */
+.livestream-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: radial-gradient(circle at top left, #fff7ea 0, #ffffff 45%, #fff3e3 100%);
+    padding: 1.4rem 1.2rem 1.4rem;
+    border: 1px solid rgba(196,154,108,0.42);
+}
+.livestream-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+    radial-gradient(circle at top right, rgba(246,211,177,0.55), transparent 58%),
+    radial-gradient(circle at bottom left, rgba(225,188,149,0.4), transparent 60%);
+    opacity: 0.55;
+    pointer-events: none;
+}
+.livestream-card-inner {
+    position: relative;
+    z-index: 1;
+}
+.livestream-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.55rem;
+}
+.livestream-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    flex-shrink: 0;
+}
+.livestream-title {
+    font-family: "Cinzel", serif;
+    font-size: 1.04rem;
+    font-weight: 600;
+    color: #4a331f;
+    margin-bottom: 0.15rem;
+}
+.livestream-sub {
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #b28655;
+}
+.livestream-text {
+    font-size: 0.9rem;
+    color: #5a4634;
+    margin: 0.4rem 0 0.8rem;
+    text-align: center;
+}
+.livestream-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+}
+.livestream-link-item {
+    padding: 0.6rem;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(196,154,108,0.3);
+}
+.livestream-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6a4a2c;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+}
+.livestream-value {
+    font-size: 0.85rem;
+    color: #8a6b48;
+    word-break: break-all;
+}
+.livestream-footer {
+    margin-top: 0.8rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #8a6b48;
+}
+.livestream-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.livestream-hint::before { content: "📡"; }
+
 /* SHARE */
 .share-card {
     position: relative;
