@@ -4,12 +4,12 @@ const RUNTIME = `runtime-${CACHE_VERSION}`;
 
 // Core assets to precache (minified production versions)
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/styles.min.css',
-  '/script.min.js',
-  '/manifest.json',
-  '/robots.txt'
+  './',
+  './index.html',
+  './styles.min.css',
+  './script.min.js',
+  './manifest.json',
+  './robots.txt'
 ];
 
 self.addEventListener('install', (event) => {
@@ -91,7 +91,7 @@ async function networkFirst(request) {
   } catch (err) {
     const cached = await cache.match(request);
     if (cached) return cached;
-    const precached = await caches.open(PRECACHE).then(c => c.match('/index.html'));
+    const precached = await caches.open(PRECACHE).then(c => c.match('./index.html'));
     return precached || new Response('Offline', { status: 503, statusText: 'Offline' });
   }
 }

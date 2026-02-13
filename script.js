@@ -32,6 +32,43 @@ function getQueryParam(key) {
     const name = getQueryParam("to");
     const el = document.getElementById("guestNameCover");
     if (el) el.textContent = name ? name : "Bapak/Ibu/Saudara/i";
+/* Lightweight wrapper: delegate to the minified production bundle.
+   This ensures any request for `script.js` executes the working bundle
+   (`script.min.js`) and avoids parse errors from stale or malformed source. */
+/* ================== FIRESTORE INITIALIZATION ================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBMKbQ7c7s_4aoDz0yAnoKSk2zOS04zEx0",
+    authDomain: "undangan-f9f5c.firebaseapp.com",
+    projectId: "undangan-f9f5c",
+    storageBucket: "undangan-f9f5c.firebasestorage.app",
+    messagingSenderId: "1028126764516",
+    appId: "1:1028126764516:web:804bbb0264c46f6dc9abf1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+console.log("✅ Firebase initialized successfully");
+console.log("🔥 Firestore project:", firebaseConfig.projectId);
+console.log("📍 Firestore instance:", db);
+
+// GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT (jika tidak digunakan, abaikan)
+const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZa2BeDatvUkt2PXDTzkAbX8QH3ItbjLdR99BIIBhgER-KU2-cYyla03mybuDCbFYj/exec";
+
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+window.addEventListener("load", () => { window.scrollTo(0, 0); });
+
+function getQueryParam(key) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(key) || "";
+}
+(function fillGuestName() {
+    const name = getQueryParam("to");
+    const el = document.getElementById("guestNameCover");
+    if (el) el.textContent = name ? name : "Bapak/Ibu/Saudara/i";
 })();
 
 const cover = document.getElementById("cover");
@@ -40,53 +77,59 @@ const bgm = document.getElementById("bgm");
 const fabMusicLabel = document.getElementById("fabMusicLabel");
 let bgmStarted = false;
 
-btnOpenCover.addEventListener("click", () => {
-    cover.style.display = "none";
+if (btnOpenCover) btnOpenCover.addEventListener("click", () => {
+    if (cover) cover.style.display = "none";
     document.body.classList.remove("locked");
     document.body.classList.add("unlocked");
-    document.getElementById("hero").scrollIntoView({ behavior: "smooth" });
+    const hero = document.getElementById("hero");
+    if (hero) hero.scrollIntoView({ behavior: "smooth" });
 
     if (bgm && !bgmStarted) {
     bgm.volume = 0.8;
     bgm.play().then(() => {
         bgmStarted = true;
-        fabMusicLabel.textContent = "Musik Menyala";
+        if (fabMusicLabel) fabMusicLabel.textContent = "Musik Menyala";
     }).catch(() => {});
     }
 });
 
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
-navToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
+if (navToggle) navToggle.addEventListener("click", () => {
+    navLinks && navLinks.classList.toggle("open");
 });
 document.querySelectorAll(".nav-links button[data-scroll]").forEach((btn) => {
     btn.addEventListener("click", () => {
     const target = btn.getAttribute("data-scroll");
     const el = document.querySelector(target);
     if (el) el.scrollIntoView({ behavior: "smooth" });
-    if (window.innerWidth <= 768) navLinks.classList.remove("open");
+    if (window.innerWidth <= 768 && navLinks) navLinks.classList.remove("open");
     });
 });
 
-document.getElementById("fabRSVP").addEventListener("click", () => {
-    document.getElementById("rsvp").scrollIntoView({ behavior: "smooth" });
+const fabRSVPEl = document.getElementById("fabRSVP");
+if (fabRSVPEl) fabRSVPEl.addEventListener("click", () => {
+    const rsvpEl = document.getElementById("rsvp");
+    if (rsvpEl) rsvpEl.scrollIntoView({ behavior: "smooth" });
 });
-document.getElementById("fabMusic").addEventListener("click", () => {
+const fabMusicEl = document.getElementById("fabMusic");
+if (fabMusicEl) fabMusicEl.addEventListener("click", () => {
     if (!bgm) return;
     if (bgm.paused) {
     bgm.play().then(() => {
         bgmStarted = true;
-        fabMusicLabel.textContent = "Musik Menyala";
+        if (fabMusicLabel) fabMusicLabel.textContent = "Musik Menyala";
     }).catch(() => {});
-    } else {
-    bgm.pause();
-    fabMusicLabel.textContent = "Musik Dimatikan";
     }
 });
-document.getElementById("backToTop").addEventListener("click", () => {
-    document.getElementById("hero").scrollIntoView({ behavior: "smooth" });
-});
+
+const navButtons = document.querySelectorAll('.nav-links button[data-scroll]');
+navButtons.forEach(btn => btn.addEventListener('click', () => {
+    const target = btn.getAttribute('data-scroll');
+    const el = document.querySelector(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (window.innerWidth <= 768 && navLinks) navLinks.classList.remove('open');
+}));
 
 // Reveal on scroll
 if ("IntersectionObserver" in window) {
@@ -373,27 +416,27 @@ function renderRsvpSummary() {
 async function loadRsvpSummaryFromServer() {
     try {
         console.log("🔄 Loading RSVP summary from Firestore...");
-        
+    
         const q = query(collection(db, "entries"), where("type", "==", "rsvp"));
         console.log("📝 Query created for RSVP entries");
-        
+    
         const snapshot = await getDocs(q);
         console.log(`✅ RSVP query successful. Found ${snapshot.size} RSVP entries`);
-        
+    
         rsvpSummary.hadir = 0;
         rsvpSummary.belum = 0;
         rsvpSummary.tidak = 0;
-        
+    
         snapshot.forEach(doc => {
             const data = doc.data();
             const jumlah = parseInt(data.jumlah || 1, 10);
             console.log(`- Entry: ${data.nama} | Status: ${data.status} | Jumlah: ${jumlah}`);
-            
+        
             if (data.status === "Insya Allah Hadir") rsvpSummary.hadir += jumlah;
             else if (data.status === "Belum Pasti") rsvpSummary.belum += jumlah;
             else if (data.status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += jumlah;
         });
-        
+    
         console.log(`📊 RSVP Summary - Hadir: ${rsvpSummary.hadir}, Belum: ${rsvpSummary.belum}, Tidak: ${rsvpSummary.tidak}`);
         renderRsvpSummary();
     } catch (err) {
@@ -450,16 +493,16 @@ const guestListEl = document.getElementById("guestList");
 
 function formatDate(isoString) {
     if (!isoString) return "";
-    
+
     const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    
+
     const date = new Date(isoString);
     const dayName = days[date.getUTCDay()];
     const dayNum = date.getUTCDate();
     const monthName = months[date.getUTCMonth()];
     const year = date.getUTCFullYear();
-    
+
     return `${dayName}, ${dayNum} ${monthName} ${year}`;
 }
 
@@ -494,20 +537,20 @@ function addGuestCard(item, prepend = false) {
 async function loadGuestbook() {
     try {
         console.log("🔄 Loading guestbook from Firestore...");
-        
+
         // Query ALL entries ordered by createdAt (terbaru dulu)
         const qAllEntries = query(
             collection(db, "entries"),
             orderBy("createdAt", "desc")
         );
         console.log("📝 Query created for all entries ordered by createdAt");
-        
+
         const snapshot = await getDocs(qAllEntries);
         console.log(`✅ Query successful. Total entries: ${snapshot.size}`);
-        
+
         // Filter entries yang punya ucapan
         let allEntries = [];
-        
+
         snapshot.forEach(doc => {
             const data = doc.data();
             // Ambil semua yang punya field ucapan dan tidak kosong
@@ -522,16 +565,16 @@ async function loadGuestbook() {
                 });
             }
         });
-        
+
         console.log(`📊 Total guestbook entries with ucapan: ${allEntries.length}`);
         guestListEl.innerHTML = "";
-        
+
         if (!allEntries.length) {
             console.log("ℹ️ No guestbook entries found, rendering empty message");
             renderGuestEmpty();
             return;
         }
-        
+
         allEntries.forEach(entry => {
             addGuestCard({
                 nama: entry.nama,
@@ -540,7 +583,7 @@ async function loadGuestbook() {
                 waktu: entry.waktu
             });
         });
-        
+
     } catch (err) {
         console.error("❌ Gagal load guestbook:", err);
         console.error("Error Code:", err.code);
@@ -634,7 +677,8 @@ function nextGallery(delta) {
 }
 
 galleryItems.forEach((img, idx) => {
-    img.parentElement.addEventListener("click", () => openLightbox(idx));
+    const parent = img.parentElement;
+    if (parent) parent.addEventListener("click", () => openLightbox(idx));
 });
 
 if (lightboxClose) {
@@ -646,17 +690,217 @@ if (lightboxPrev) {
 if (lightboxNext) {
     lightboxNext.addEventListener("click", () => nextGallery(1));
 }
-lightbox.addEventListener("click", (e) => {
+if (lightbox) {
+    lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) {
-    closeLightbox();
+        closeLightbox();
     }
-});
-document.addEventListener("keydown", (e) => {
+    });
+    document.addEventListener("keydown", (e) => {
     if (!lightbox.classList.contains("open")) return;
     if (e.key === "Escape") closeLightbox();
     if (e.key === "ArrowRight") nextGallery(1);
     if (e.key === "ArrowLeft") nextGallery(-1);
+    });
+}
+
+/* ================== SHARE ================== */
+const btnShareNative = document.getElementById("btnShareNative");
+const btnShareWA = document.getElementById("btnShareWA");
+const btnCopyLink = document.getElementById("btnCopyLink");
+
+const shareTitle = "Undangan Pernikahan Dwi Unzila Putri & Ahmad Bakri";
+const shareText = "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan Dwi Unzila Putri & Ahmad Bakri pada Minggu, 29 Maret 2026 (Akad: 08.00 WIB, Resepsi: 10.00 WIB) di Gedung Diamond, Kota Pangkal Pinang.";
+const shareUrl = window.location.href;
+
+if (btnShareNative) {
+    btnShareNative.addEventListener("click", async () => {
+    if (navigator.share) {
+        try {
+        await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+        } catch (err) {
+        console.log("Share dibatalkan / gagal:", err);
+        }
+    } else {
+        // fallback copy
+        if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Link undangan sudah disalin.");
+        } else {
+        alert("Silakan salin link undangan langsung dari address bar browser.");
+        }
+    }
+    });
+}
+
+if (btnShareWA) {
+    btnShareWA.addEventListener("click", () => {
+    const text = encodeURIComponent(
+        "Assalamu'alaikum,\n\n" +
+        "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan Dwi Unzila Putri & Ahmad Bakri.\n\n" +
+        "Hari/Tanggal: Minggu, 29 Maret 2026\n" +
+        "Akad: 08.00 WIB\n" +
+        "Resepsi: 10.00 - 13.00 WIB\n" +
+        "Tempat: Gedung Diamond, Kec. Girimaya, Kota Pangkal Pinang\n\n" +
+        "Link undangan lengkap:\n" + shareUrl + "\n\n" +
+        "Mohon konfirmasi kehadiran melalui fitur RSVP di halaman undangan ini.\n\n" +
+        "Terima kasih atas doa dan dukungan Anda."
+    );
+    const waUrl = "https://wa.me/?text=" + text;
+    window.open(waUrl, "_blank");
+    });
+}
+
+if (btnCopyLink) {
+    btnCopyLink.addEventListener("click", async () => {
+    try {
+        if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Link undangan berhasil disalin.");
+        } else {
+        const temp = document.createElement("textarea");
+        temp.value = shareUrl;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        alert("Link undangan berhasil disalin.");
+        }
+    } catch (err) {
+        alert("Gagal menyalin link. Silakan salin langsung dari address bar.");
+    }
+    });
+}
+
+// Inisialisasi data dari server setelah DOM siap dan page fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("📄 DOMContentLoaded triggered, attempting to load Firestore data...");
+    
+    // Defer Firebase data loading to idle time
+    if (typeof requestIdleCallback !== "undefined") {
+        console.log("⏳ Using requestIdleCallback to load data");
+        requestIdleCallback(() => {
+            console.log("⚡ Idle callback executing: loading RSVP and guestbook");
+            loadRsvpSummaryFromServer();
+            loadGuestbook();
+        });
+    } else {
+        // Fallback for browsers without requestIdleCallback
+        console.log("⏳ requestIdleCallback not available, using setTimeout 1000ms fallback");
+        setTimeout(() => {
+            console.log("⚡ Timeout callback executing: loading RSVP and guestbook");
+            loadRsvpSummaryFromServer();
+            loadGuestbook();
+        }, 1000);
+    }
 });
+        e.preventDefault();
+
+        const nama = document.getElementById("guestName").value.trim();
+        const hubungan = document.getElementById("guestRelation").value.trim();
+        const ucapan = document.getElementById("guestMessage").value.trim();
+
+        if (!nama || !ucapan) return;
+
+        const hint = this.querySelector(".small-hint");
+        if (hint) {
+            hint.style.opacity = "1";
+            hint.textContent = "Mengirim ucapan...";
+        }
+
+        try {
+            // Save to Firestore (PRIMARY - only source)
+            await addDoc(collection(db, "entries"), {
+                type: "guestbook",
+                nama,
+                hubungan,
+                ucapan,
+                createdAt: new Date().toISOString()
+            });
+
+            if (hint) {
+                hint.textContent = "Ucapan berhasil dikirim. Terima kasih 🤍";
+                setTimeout(() => (hint.style.opacity = "0"), 1800);
+            }
+
+            addGuestCard(
+                {
+                    nama,
+                    hubungan,
+                    ucapan,
+                    waktu: "Baru saja"
+                },
+                true
+            );
+
+            this.reset();
+
+        } catch (err) {
+            console.error("❌ Gagal kirim guestbook:", err.message);
+            if (hint) {
+                hint.textContent = "Gagal mengirim ucapan. Mohon coba lagi.";
+                hint.style.opacity = "1";
+            }
+        }
+    });
+}
+
+/* ================== GALLERY LIGHTBOX ================== */
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxClose = document.getElementById("lightboxClose");
+const lightboxPrev = document.getElementById("lightboxPrev");
+const lightboxNext = document.getElementById("lightboxNext");
+const galleryItems = Array.from(document.querySelectorAll(".gallery-item img"));
+let currentGalleryIndex = 0;
+
+function openLightbox(index) {
+    if (!galleryItems.length) return;
+    if (index < 0 || index >= galleryItems.length) index = 0;
+    currentGalleryIndex = index;
+    lightboxImg.src = galleryItems[index].src;
+    lightbox.classList.add("open");
+    document.body.classList.add("locked");
+}
+
+function closeLightbox() {
+    lightbox.classList.remove("open");
+    document.body.classList.remove("locked");
+}
+
+function nextGallery(delta) {
+    if (!galleryItems.length) return;
+    currentGalleryIndex = (currentGalleryIndex + delta + galleryItems.length) % galleryItems.length;
+    lightboxImg.src = galleryItems[currentGalleryIndex].src;
+}
+
+galleryItems.forEach((img, idx) => {
+    const parent = img.parentElement;
+    if (parent) parent.addEventListener("click", () => openLightbox(idx));
+});
+
+if (lightboxClose) {
+    lightboxClose.addEventListener("click", closeLightbox);
+}
+if (lightboxPrev) {
+    lightboxPrev.addEventListener("click", () => nextGallery(-1));
+}
+if (lightboxNext) {
+    lightboxNext.addEventListener("click", () => nextGallery(1));
+}
+if (lightbox) {
+    lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+        closeLightbox();
+    }
+    });
+    document.addEventListener("keydown", (e) => {
+    if (!lightbox.classList.contains("open")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowRight") nextGallery(1);
+    if (e.key === "ArrowLeft") nextGallery(-1);
+    });
+}
 
 /* ================== SHARE ================== */
 const btnShareNative = document.getElementById("btnShareNative");

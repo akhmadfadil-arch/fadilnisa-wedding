@@ -965,18 +965,50 @@
   <script>
     // Register service worker (non-blocking)
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
     }
+
+    // Ensure cover open works immediately on first click (before module loads)
+    (function preflightOpenCover() {
+      const btn = document.getElementById('btnOpenCover');
+      if (!btn) return;
+      btn.addEventListener('click', function preOpen() {
+        // Load module quickly (fallback) so event handlers from module are available
+          try {
+          const s = document.createElement('script');
+            s.type = 'module';
+            s.src = './script.min.js';
+          document.body.appendChild(s);
+        } catch (e) {
+          // ignore
+        }
+
+        // Immediate UI fallback: open cover now so user sees response
+        const cover = document.getElementById('cover');
+        if (cover) cover.style.display = 'none';
+        document.body.classList.remove('locked');
+        document.body.classList.add('unlocked');
+        const hero = document.getElementById('hero');
+        if (hero) hero.scrollIntoView({ behavior: 'smooth' });
+        const bgm = document.getElementById('bgm');
+        if (bgm) {
+          bgm.volume = 0.8;
+          bgm.play().catch(() => {});
+        }
+
+        btn.removeEventListener('click', preOpen);
+      }, { once: true, passive: true });
+    })();
 
     // Load main module during idle or after first interaction
     const loadMainModule = () => {
       try {
-        import('/script.min.js');
+        import('./script.min.js');
       } catch (e) {
         // dynamic import may fail on some older setups; fallback to adding script tag
         const s = document.createElement('script');
         s.type = 'module';
-        s.src = '/script.min.js';
+        s.src = './script.min.js';
         document.body.appendChild(s);
       }
     };
@@ -995,6 +1027,9 @@
   </script>
 
   <!-- Analytics - Load after page content -->
-  <script defer src="https://cdn.vercel-analytics.com/v1/speed-insights/script.js"></script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
