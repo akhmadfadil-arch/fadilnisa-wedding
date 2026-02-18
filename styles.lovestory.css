@@ -1,25 +1,74 @@
 /* Love Story section overrides */
-.story-carousel-shell {padding: 1.8rem 1.6rem 2rem; box-shadow: 0 30px 70px rgba(28,20,12,0.08); border-radius: calc(var(--radius-xl) + 6px);} 
-.story-intro-title {font-size: 1.28rem; font-weight:700; color:#3b2a1f; text-align:center} 
-.story-intro-text {font-size:0.95rem; max-width:780px; margin:0.2rem auto 1rem; text-align:center} 
-.story-track {perspective:1800px; padding-top:0.9rem}
-.story-slide {max-width:760px; border-radius:28px; padding:1.6rem; box-shadow:0 28px 60px rgba(34,22,11,0.08)}
-.story-photo-frame {min-height:260px; border-radius:20px; box-shadow:0 22px 48px rgba(0,0,0,0.14)}
-.story-photo-frame::before {background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.02))}
+.story-carousel-shell {padding: 2.4rem 1.8rem 2.6rem; box-shadow: 0 40px 90px rgba(28,20,12,0.10); border-radius: calc(var(--radius-xl) + 10px);} 
+.story-intro-title {font-size: 1.6rem; font-weight:700; color:#3b2a1f; text-align:center} 
+.story-intro-text {font-size:1.05rem; max-width:860px; margin:0.35rem auto 1.1rem; text-align:center} 
+.story-track {perspective:2000px; padding-top:1.2rem}
+.story-slide {max-width:920px; border-radius:28px; padding:2rem; box-shadow:0 32px 72px rgba(34,22,11,0.10)}
+.story-photo-frame {min-height:320px; border-radius:20px; box-shadow:0 28px 60px rgba(0,0,0,0.16)}
+.story-photo-frame::before {background: linear-gradient(180deg, rgba(0,0,0,0.14), rgba(0,0,0,0.03))}
 .story-photo-frame img {transition: transform 0.6s ease, filter 0.45s ease}
-.story-photo-tag {background: linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.48)); padding:0.35rem 0.7rem; border-radius:12px; font-size:0.82rem}
-.story-text-block {padding:0.2rem 0}
+.story-photo-tag {background: linear-gradient(90deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)); padding:0.45rem 0.9rem; border-radius:12px; font-size:0.9rem}
+.story-text-block {padding:0.4rem 0}
 
 /* Typography polish: step label (lighter) + prominent title */
-.story-step-label {font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: 0.9rem; color: #8b6f53; letter-spacing: 0.1em; text-transform: none; text-transform: none; margin-bottom: 0.35rem}
+.story-step-label {font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800; font-size: 0.95rem; color: #6b4f38; letter-spacing: 0.06em; text-transform: none; margin-bottom: 0.35rem}
 .story-title {font-family: "Cinzel", serif; font-size: 1.36rem; font-weight: 700; color: #34241b; line-height: 1.02; letter-spacing: 0.01em; margin-bottom: 0.45rem}
 .story-title::after {content: ""; display: block; width: 56px; height: 2px; background: linear-gradient(90deg,#c49a6c,#f2d3a5); margin-top: 0.55rem; border-radius: 2px; opacity: 0.9}
-.story-text {font-size:0.98rem; line-height:1.6; max-height:260px}
+.story-text {font-size:1.05rem; line-height:1.7; max-height:360px}
+
+/* Directional slide classes used by JS for smooth enters/exits */
+.story-slide.enter-from-right { transform: translateX(40px) translateY(0) rotateX(6deg); opacity: 0; visibility: visible }
+.story-slide.enter-from-left  { transform: translateX(-40px) translateY(0) rotateX(6deg); opacity: 0; visibility: visible }
+.story-slide.exit-to-left     { transform: translateX(-40px) translateY(0) rotateX(6deg); opacity: 0 }
+.story-slide.exit-to-right    { transform: translateX(40px) translateY(0) rotateX(6deg); opacity: 0 }
 
 @media (max-width:880px) {
   .story-carousel-shell {padding:1.2rem}
   .story-slide {grid-template-columns:1fr !important; position:relative; padding:1.1rem}
   .story-photo-frame {min-height:220px}
   .story-intro-title, .story-intro-text {text-align:left}
-  .story-text {max-height:none; overflow:visible}
+  /* Ensure mobile-friendly scrolling inside the card to avoid page overflow */
+  .story-track {min-height:520px}
+  .story-text-block {max-height:260px; overflow-y:auto; padding-right:0.4rem}
+  .story-text {max-height:none; font-size:1.02rem; font-weight:500; color: #3b2a1f}
+}
+
+/* Mobile carousel: keep absolute slides (so JS animations + swipe work) but limit height */
+@media (max-width:680px) {
+  .story-carousel-shell {padding:1rem}
+  .story-track {
+    position: relative !important;
+    perspective: 1200px !important;
+    min-height: 500px !important; /* increased height for better story visibility */
+    padding-top: 0.4rem !important;
+    overflow: hidden;
+  }
+  /* Decorative depth layers hidden to save vertical space */
+  .story-depth-layer {display: none !important}
+
+  .story-slide {
+    position: absolute !important;
+    inset: 0 !important;
+    margin: auto !important;
+    max-width: 100% !important;
+    width: calc(100% - 1.2rem) !important;
+    transform-origin: center !important;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.08) !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important; /* photo above, text below via grid stacking */
+    gap: 0.6rem !important;
+    align-items: start !important;
+    padding: 1rem !important;
+    border-radius: 18px !important;
+  }
+
+  .story-photo-frame {min-height:200px; border-radius:14px}
+
+  /* Text area inside card can scroll if content long */
+  .story-text-block {max-height:250px; overflow-y:auto; -webkit-overflow-scrolling: touch; padding-right:6px}
+  .story-text {line-height:1.5; font-size:1.02rem; font-weight:500; color:#35261c}
+
+  .story-nav {width:36px; height:36px}
+  .story-dots {margin-top:0.6rem}
+  .story-progress {margin-top:1rem}
 }

@@ -3,20 +3,98 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebas
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBMKbQ7c7s_4aoDz0yAnoKSk2zOS04zEx0",
-    authDomain: "undangan-f9f5c.firebaseapp.com",
-    projectId: "undangan-f9f5c",
-    storageBucket: "undangan-f9f5c.firebasestorage.app",
-    messagingSenderId: "1028126764516",
-    appId: "1:1028126764516:web:804bbb0264c46f6dc9abf1"
+    apiKey: "AIzaSyB_FrZNb1q2fPl8RI9mSIb8zKZzchOWOR8",
+    authDomain: "undangan-zila.firebaseapp.com",
+    projectId: "undangan-zila",
+    storageBucket: "undangan-zila.firebasestorage.app",
+    messagingSenderId: "663200651385",
+    appId: "1:663200651385:web:26b9c700b32de7c27f1ca8"
 };
 
+console.log("🚀 Starting Firebase initialization...");
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 console.log("✅ Firebase initialized successfully");
 console.log("🔥 Firestore project:", firebaseConfig.projectId);
 console.log("📍 Firestore instance:", db);
+
+// Start loading data immediately after Firebase init
+console.log("🚀 Starting data loading process...");
+setTimeout(async () => {
+    console.log("⏰ Timeout triggered, testing Firestore and loading data...");
+    const isConnected = await testFirestoreConnection();
+    if (isConnected) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('addTestData') === 'true') {
+            await addTestDataIfEmpty();
+        }
+        loadRsvpSummaryFromServer();
+        loadGuestbook();
+    }
+}, 1000);
+
+// Test Firestore connectivity
+async function testFirestoreConnection() {
+    try {
+        console.log("🔍 Testing Firestore connection...");
+        const testQuery = query(collection(db, "entries"));
+        const snapshot = await getDocs(testQuery);
+        console.log(`✅ Firestore connection successful. Found ${snapshot.size} total entries.`);
+        return true;
+    } catch (error) {
+        console.error("❌ Firestore connection failed:", error);
+        console.error("Error code:", error.code);
+        console.error("Error message:", error.message);
+        return false;
+    }
+}
+
+// Optional: Add test data if needed for development
+async function addTestDataIfEmpty() {
+    try {
+        console.log("🔍 Checking if test data is needed...");
+        const q = query(collection(db, "entries"), where("type", "==", "rsvp"));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.size === 0) {
+            console.log("📝 No RSVP data found. Adding test data for development...");
+            
+            // Add some test RSVP entries
+            const testEntries = [
+                {
+                    type: "rsvp",
+                    nama: "Test User 1",
+                    whatsapp: "081234567890",
+                    status: "Insya Allah Hadir",
+                    jumlah: 2,
+                    ucapan: "Selamat menempuh hidup baru!",
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    type: "rsvp",
+                    nama: "Test User 2", 
+                    whatsapp: "081234567891",
+                    status: "Belum Pasti",
+                    jumlah: 1,
+                    ucapan: "Semoga lancar acaranya",
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            
+            for (const entry of testEntries) {
+                await addDoc(collection(db, "entries"), entry);
+                console.log(`✅ Added test entry: ${entry.nama}`);
+            }
+            
+            console.log("🎉 Test data added successfully!");
+        } else {
+            console.log(`ℹ️ Found ${snapshot.size} existing entries, no test data needed.`);
+        }
+    } catch (error) {
+        console.error("❌ Failed to add test data:", error);
+    }
+}
 
 // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT (jika tidak digunakan, abaikan)
 const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZa2BeDatvUkt2PXDTzkAbX8QH3ItbjLdR99BIIBhgER-KU2-cYyla03mybuDCbFYj/exec";
@@ -359,8 +437,12 @@ function renderRsvpSummary() {
     const belumEl = document.getElementById("rsvpSumBelum");
     const tidakEl = document.getElementById("rsvpSumTidak");
     const totalEl = document.getElementById("rsvpSumTotal");
+    const statusEl = document.getElementById("rsvpLoadingStatus");
 
-    if (!hadirEl) return;
+    if (!hadirEl) {
+        console.warn("⚠️ RSVP summary elements not found in DOM");
+        return;
+    }
 
     hadirEl.textContent = rsvpSummary.hadir;
     belumEl.textContent = rsvpSummary.belum;
@@ -368,17 +450,45 @@ function renderRsvpSummary() {
 
     const total = rsvpSummary.hadir + rsvpSummary.belum + rsvpSummary.tidak;
     totalEl.textContent = total;
+    
+    // Update loading status
+    if (statusEl) {
+        statusEl.textContent = "Data berhasil dimuat";
+        statusEl.style.color = "#4CAF50"; // Green color for success
+    }
+    
+    console.log(`📊 RSVP Summary rendered: Hadir=${rsvpSummary.hadir}, Belum=${rsvpSummary.belum}, Tidak=${rsvpSummary.tidak}, Total=${total}`);
 }
 
 async function loadRsvpSummaryFromServer() {
+    const statusEl = document.getElementById("rsvpLoadingStatus");
+    if (statusEl) {
+        statusEl.textContent = "Memuat data RSVP...";
+        statusEl.style.color = "#666";
+    }
+    
     try {
         console.log("🔄 Loading RSVP summary from Firestore...");
+        
+        // First, test basic connectivity
+        console.log("🔍 Testing Firestore connectivity...");
+        const testCollection = collection(db, "entries");
+        console.log("📋 Collection reference created:", testCollection);
         
         const q = query(collection(db, "entries"), where("type", "==", "rsvp"));
         console.log("📝 Query created for RSVP entries");
         
         const snapshot = await getDocs(q);
         console.log(`✅ RSVP query successful. Found ${snapshot.size} RSVP entries`);
+        
+        if (snapshot.size === 0) {
+            console.log("ℹ️ No RSVP entries found in Firestore. This might be normal if no one has RSVP'd yet.");
+            console.log("💡 Consider adding some test data or checking Firestore rules.");
+            if (statusEl) {
+                statusEl.textContent = "Belum ada data RSVP";
+                statusEl.style.color = "#666";
+            }
+        }
         
         rsvpSummary.hadir = 0;
         rsvpSummary.belum = 0;
@@ -401,6 +511,36 @@ async function loadRsvpSummaryFromServer() {
         console.error("Error Code:", err.code);
         console.error("Error Message:", err.message);
         console.error("Full Error:", err);
+        
+        // Update status to show error
+        if (statusEl) {
+            statusEl.textContent = "Gagal memuat data";
+            statusEl.style.color = "#f44336"; // Red color for error
+        }
+        
+        // Try to provide more specific error information
+        if (err.code === 'permission-denied') {
+            console.error("🔒 Permission denied - Check Firestore security rules");
+            console.log("💡 Make sure Firestore rules allow read operations:");
+            console.log("   rules_version = '2';");
+            console.log("   service cloud.firestore {");
+            console.log("     match /databases/{database}/documents {");
+            console.log("       match /entries/{document=**} {");
+            console.log("         allow read: if true;");
+            console.log("         allow create: if request.resource.data.type in ['rsvp', 'guestbook'];");
+            console.log("       }");
+            console.log("     }");
+            console.log("   }");
+            if (statusEl) statusEl.textContent = "Akses ditolak - periksa pengaturan Firestore";
+        } else if (err.code === 'unavailable') {
+            console.error("🌐 Network error - Check internet connection");
+            if (statusEl) statusEl.textContent = "Kesalahan jaringan";
+        } else if (err.code === 'not-found') {
+            console.error("📁 Collection not found - Collection 'entries' may not exist yet");
+            console.log("💡 This is normal if no data has been added yet.");
+            if (statusEl) statusEl.textContent = "Data belum tersedia";
+        }
+        
         renderRsvpSummary();
     }
 }
@@ -415,11 +555,13 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
     const statusMsg = document.getElementById("rsvpStatusMsg");
     if (!name) return;
 
-    statusMsg.textContent = "Mengirim data RSVP.";
+    statusMsg.textContent = "Mengirim data RSVP...";
 
     try {
+        console.log("📤 Attempting to save RSVP to Firestore...");
+        
         // Save to Firestore (PRIMARY source)
-        await addDoc(collection(db, "entries"), {
+        const docRef = await addDoc(collection(db, "entries"), {
             type: "rsvp",
             nama: name,
             whatsapp: phone,
@@ -428,7 +570,8 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
             ucapan: msg,
             createdAt: new Date().toISOString()
         });
-
+        
+        console.log("✅ RSVP saved successfully with ID:", docRef.id);
         statusMsg.textContent = "RSVP berhasil dikirim. Terima kasih 🙏";
 
         // Update ringkas lokal - tambahkan berdasarkan jumlah tamu
@@ -440,8 +583,17 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
 
         this.reset();
     } catch (err) {
-        console.error("❌ Gagal kirim RSVP:", err.message);
-        statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
+        console.error("❌ Gagal kirim RSVP:", err);
+        console.error("Error Code:", err.code);
+        console.error("Error Message:", err.message);
+        
+        if (err.code === 'permission-denied') {
+            statusMsg.textContent = "Gagal mengirim: Akses ditolak. Periksa pengaturan Firestore.";
+        } else if (err.code === 'unavailable') {
+            statusMsg.textContent = "Gagal mengirim: Koneksi bermasalah. Coba lagi nanti.";
+        } else {
+            statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
+        }
     }
 });
 
@@ -727,24 +879,44 @@ if (btnCopyLink) {
 }
 
 // Inisialisasi data dari server setelah DOM siap dan page fully loaded
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("📄 DOMContentLoaded triggered, attempting to load Firestore data...");
     
-    // Defer Firebase data loading to idle time
-    if (typeof requestIdleCallback !== "undefined") {
-        console.log("⏳ Using requestIdleCallback to load data");
-        requestIdleCallback(() => {
-            console.log("⚡ Idle callback executing: loading RSVP and guestbook");
-            loadRsvpSummaryFromServer();
-            loadGuestbook();
-        });
-    } else {
-        // Fallback for browsers without requestIdleCallback
-        console.log("⏳ requestIdleCallback not available, using setTimeout 1000ms fallback");
-        setTimeout(() => {
-            console.log("⚡ Timeout callback executing: loading RSVP and guestbook");
-            loadRsvpSummaryFromServer();
-            loadGuestbook();
-        }, 1000);
+    // Test Firestore connection first
+    const isConnected = await testFirestoreConnection();
+    if (!isConnected) {
+        console.error("❌ Cannot proceed without Firestore connection");
+        return;
     }
+    
+    // Check if we should add test data (for development)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('addTestData') === 'true') {
+        await addTestDataIfEmpty();
+    }
+    
+    // Load immediately for testing
+    console.log("⚡ Loading RSVP and guestbook immediately");
+    loadRsvpSummaryFromServer();
+    loadGuestbook();
 });
+
+// Also try to load immediately if DOM is already loaded
+if (document.readyState === 'loading') {
+    console.log("📄 DOM still loading, waiting for DOMContentLoaded...");
+} else {
+    console.log("📄 DOM already loaded, loading data immediately...");
+    // Call the same function as DOMContentLoaded
+    (async () => {
+        const isConnected = await testFirestoreConnection();
+        if (isConnected) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('addTestData') === 'true') {
+                await addTestDataIfEmpty();
+            }
+            console.log("⚡ Loading RSVP and guestbook immediately (DOM already loaded)");
+            loadRsvpSummaryFromServer();
+            loadGuestbook();
+        }
+    })();
+}

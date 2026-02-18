@@ -4,9 +4,21 @@
 ✅ Frontend integration selesai. Data RSVP & Ucapan akan otomatis menyimpan ke Firestore.
 
 ## Firebase Project Details
-- **Project ID:** `undangan-f9f5c`
+- **Project ID:** `undangan-zila`
 - **Database:** Firestore (Google Cloud Firestore)
-- **Web App Name:** undangan-f9f5c
+- **Web App Name:** undangan-zila
+
+## Firebase Configuration
+```javascript
+const firebaseConfig = {
+  apiKey: "AIzaSyB_FrZNb1q2fPl8RI9mSIb8zKZzchOWOR8",
+  authDomain: "undangan-zila.firebaseapp.com",
+  projectId: "undangan-zila",
+  storageBucket: "undangan-zila.firebasestorage.app",
+  messagingSenderId: "663200651385",
+  appId: "1:663200651385:web:26b9c700b32de7c27f1ca8"
+};
+```
 
 ## Data Structure
 
@@ -40,36 +52,25 @@ Menyimpan semua RSVP dan guestbook entries dengan struktur berikut:
 ## Required Firebase Console Setup
 
 ### 1. Firestore Security Rules
-✅ **PENTING:** Atur Firestore Rules untuk mengizinkan write dari frontend dengan batasan:
+✅ **PENTING:** Atur Firestore Rules untuk mengizinkan read dari frontend dan create untuk RSVP/guestbook:
 
 ```firebase_rules
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Allow public read for all documents (for viewing RSVP summary, guestbook, etc.)
+    // Allow create for RSVP and guestbook entries
+    // No update/delete from frontend for security
     match /entries/{document=**} {
-      // Allow public read (unlimited history)
       allow read: if true;
-      
-      // Allow write hanya untuk dokumen RSVP & guestbook dengan validasi dasar
       allow create: if 
         request.resource.data.type in ["rsvp", "guestbook"] &&
         request.resource.data.createdAt == request.time &&
+        request.resource.data.nama != null &&
         (
-          (
-            request.resource.data.type == "rsvp" &&
-            request.resource.data.nama != null &&
-            request.resource.data.whatsapp != null &&
-            request.resource.data.status != null &&
-            request.resource.data.jumlah != null
-          ) ||
-          (
-            request.resource.data.type == "guestbook" &&
-            request.resource.data.nama != null &&
-            request.resource.data.ucapan != null
-          )
+          (request.resource.data.type == "rsvp" && request.resource.data.status != null) ||
+          (request.resource.data.type == "guestbook" && request.resource.data.ucapan != null)
         );
-      
-      // Tidak allow update/delete dari frontend
       allow update: if false;
       allow delete: if false;
     }
@@ -80,7 +81,7 @@ service cloud.firestore {
 ### 2. Langkah Setup di Firebase Console
 
 1. **Buka Firebase Console:** https://console.firebase.google.com/
-2. **Select Project:** `undangan-f9f5c`
+2. **Select Project:** `undangan-zila`
 3. **Go to Firestore Database**
 4. **Click "Rules" tab**
 5. **Paste rules di atas**
