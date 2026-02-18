@@ -1,0 +1,25 @@
+/* Love Story section overrides */
+.story-carousel-shell {padding: 1.8rem 1.6rem 2rem; box-shadow: 0 30px 70px rgba(28,20,12,0.08); border-radius: calc(var(--radius-xl) + 6px);} 
+.story-intro-title {font-size: 1.28rem; font-weight:700; color:#3b2a1f; text-align:center} 
+.story-intro-text {font-size:0.95rem; max-width:780px; margin:0.2rem auto 1rem; text-align:center} 
+.story-track {perspective:1800px; padding-top:0.9rem}
+.story-slide {max-width:760px; border-radius:28px; padding:1.6rem; box-shadow:0 28px 60px rgba(34,22,11,0.08)}
+.story-photo-frame {min-height:260px; border-radius:20px; box-shadow:0 22px 48px rgba(0,0,0,0.14)}
+.story-photo-frame::before {background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.02))}
+.story-photo-frame img {transition: transform 0.6s ease, filter 0.45s ease}
+.story-photo-tag {background: linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.48)); padding:0.35rem 0.7rem; border-radius:12px; font-size:0.82rem}
+.story-text-block {padding:0.2rem 0}
+
+/* Typography polish: step label (lighter) + prominent title */
+.story-step-label {font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: 0.9rem; color: #8b6f53; letter-spacing: 0.1em; text-transform: none; text-transform: none; margin-bottom: 0.35rem}
+.story-title {font-family: "Cinzel", serif; font-size: 1.36rem; font-weight: 700; color: #34241b; line-height: 1.02; letter-spacing: 0.01em; margin-bottom: 0.45rem}
+.story-title::after {content: ""; display: block; width: 56px; height: 2px; background: linear-gradient(90deg,#c49a6c,#f2d3a5); margin-top: 0.55rem; border-radius: 2px; opacity: 0.9}
+.story-text {font-size:0.98rem; line-height:1.6; max-height:260px}
+
+@media (max-width:880px) {
+  .story-carousel-shell {padding:1.2rem}
+  .story-slide {grid-template-columns:1fr !important; position:relative; padding:1.1rem}
+  .story-photo-frame {min-height:220px}
+  .story-intro-title, .story-intro-text {text-align:left}
+  .story-text {max-height:none; overflow:visible}
+}
