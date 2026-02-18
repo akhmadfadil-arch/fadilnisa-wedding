@@ -13,7 +13,7 @@
   
   <!-- Restored aesthetic fonts (Cinzel, Nunito, Great Vibes) -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.min.css">
+  <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   
 </head>
@@ -66,7 +66,7 @@
         <button data-scroll="#gift">Wedding Gift</button>
         <button data-scroll="#rsvp">RSVP</button>
         <button data-scroll="#gallery">Galeri</button>
-        <button data-scroll="#guestbook">Ucapan</button>
+        <button data-scroll="#livestream">Livestream</button>
       </div>
     </div>
   </div>
@@ -271,8 +271,7 @@
                   <div class="story-step-pill">
                     <span>📖</span><span>Awal Mula</span>
                   </div>
-                  <div class=\"story-step-label\">Semua berawal dari layar yang sama</div>
-                  <div class=\"story-title\">Awal yang Tak Terduga</div>
+                  <div class=\"story-step-label\"><strong>Semua berawal dari layar yang sama</strong></div>
                   <p class=\"story-text\">
                     <span class=\"icon\">✨</span>
                     Kami dipertemukan bukan oleh takdir yang dramatis, melainkan oleh sebuah ruang virtual.
@@ -295,8 +294,7 @@
                   <div class="story-step-pill">
                     <span>🌱</span><span>Pertemuan</span>
                   </div>
-                  <div class=\"story-step-label\">Takdir mempertemukan kami kembali</div>
-                  <div class=\"story-title\">Dipertemukan Kembali</div>
+                  <div class=\"story-step-label\"><strong>Takdir mempertemukan kami kembali</strong></div>
                   <p class=\"story-text\">
                     <span class=\"icon\">✨</span>
                     Ketika semua aktivitas mulai kembali normal, kami kembali dipertemukan—kali ini bukan lewat layar, melainkan tatap muka di ruang kelas yang sama.
@@ -318,8 +316,7 @@
                   <div class="story-step-pill">
                     <span>💞</span><span>Perjalanan Kasih</span>
                   </div>
-                  <div class=\"story-step-label\">Kenyamanan itu tumbuh tanpa kami sadari</div>
-                  <div class=\"story-title\">Tumbuh Bersama</div>
+                  <div class=\"story-step-label\"><strong>Kenyamanan itu tumbuh tanpa kami sadari</strong></div>
                   <p class=\"story-text\">
                     <span class=\"icon\">✨</span>
                     Hari demi hari, pertemuan yang semakin intens membuat kami saling mengenal lebih dalam.
@@ -340,10 +337,9 @@
                 </div>
                 <div class="story-text-block">
                   <div class="story-step-pill">
-                    <span>💍</span><span>Momen Lamaran</span>
+                    <span>💍</span><span>Ikatan Janji</span>
                   </div>
-                  <div class=\"story-step-label\">Cinta diuji oleh jarak, namun tak pernah goyah</div>
-                  <div class=\"story-title\">Menuju Keseriusan &amp; Ujian Jarak</div>
+                  <div class=\"story-step-label\"><strong>Cinta diuji oleh jarak, namun tak pernah goyah</strong></div>
                   <p class=\"story-text\">
                     <span class=\"icon\">✨</span>
                     Di penghujung masa kuliah, tepat saat wisuda, kami mempertemukan dua keluarga untuk pertama kalinya.
@@ -369,8 +365,7 @@
                   <div class="story-step-pill">
                     <span>🤍</span><span>Menuju Hari Bahagia</span>
                   </div>
-                  <div class=\"story-step-label\">Kini, kami memilih untuk selamanya</div>
-                  <div class=\"story-title\">Hari Bahagia Kami</div>
+                  <div class=\"story-step-label\"><strong>Kini, kami memilih untuk bersama</strong></div>
                   <p class=\"story-text\">
                     <span class=\"icon\">✨</span>
                     Hingga akhirnya, waktu mempertemukan kami kembali.
@@ -848,6 +843,50 @@
 
     
 
+    <!-- LIVESTREAM -->
+    <section id="livestream" class="section-decor">
+      <div class="container">
+        <h2 class="section-title">Saksikan Acara</h2>
+        <p class="section-subtitle">Live Streaming</p>
+        <div class="section-divider"></div>
+
+        <div class="card-soft reveal hover-rise">
+          <div class="livestream-card">
+            <div class="livestream-card-inner">
+              <div class="livestream-header">
+                <div class="livestream-icon">📹</div>
+                <div>
+                  <div class="livestream-title">Saksikan Acara Kami</div>
+                  <div class="livestream-sub">Ikuti momen spesial secara langsung</div>
+                </div>
+              </div>
+              <p class="livestream-text">
+                Bagi yang tidak bisa hadir secara langsung, Anda dapat menyaksikan acara secara live streaming. 
+                Tautan akan tersedia pada hari acara.
+              </p>
+              <div class="livestream-links">
+                <div class="livestream-link-item">
+                  <div class="livestream-label">📹 Link Live Streaming 1</div>
+                  <div class="livestream-value" id="live1">Akan diupdate saat acara dimulai</div>
+                </div>
+                <div class="livestream-link-item">
+                  <div class="livestream-label">📹 Link Live Streaming 2</div>
+                  <div class="livestream-value" id="live2">Akan diupdate saat acara dimulai</div>
+                </div>
+              </div>
+              <div class="livestream-footer">
+                <span class="livestream-hint">
+                  Pastikan koneksi internet Anda stabil untuk menyaksikan live streaming dengan lancar.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
     <!-- SHARE -->
     <section id="share" class="section-decor">
       <div class="container">
@@ -879,11 +918,6 @@
                 <button class="share-btn" id="btnCopyLink">
                   <span>🔗</span><span>Copy Link</span>
                 </button>
-              </div>
-              <div class="live-streaming" style="margin-top:0.8rem; font-size:0.95rem; color:#4a331f;">
-                <div style="font-weight:600; margin-bottom:0.25rem;">Live Streaming</div>
-                <div id="live1">Live Streaming URL 1: -</div>
-                <div id="live2">Live Streaming URL 2: -</div>
               </div>
               <div class="share-footer">
                 <span class="share-hint">
@@ -934,12 +968,12 @@
     // Load main module during idle or after first interaction
     const loadMainModule = () => {
       try {
-        import('/script.min.js');
+        import('/script.js');
       } catch (e) {
         // dynamic import may fail on some older setups; fallback to adding script tag
         const s = document.createElement('script');
         s.type = 'module';
-        s.src = '/script.min.js';
+        s.src = '/script.js';
         document.body.appendChild(s);
       }
     };

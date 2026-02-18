@@ -3,20 +3,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebas
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBMKbQ7c7s_4aoDz0yAnoKSk2zOS04zEx0",
-    authDomain: "undangan-f9f5c.firebaseapp.com",
-    projectId: "undangan-f9f5c",
-    storageBucket: "undangan-f9f5c.firebasestorage.app",
-    messagingSenderId: "1028126764516",
-    appId: "1:1028126764516:web:804bbb0264c46f6dc9abf1"
+    apiKey: "AIzaSyB_FrZNb1q2fPl8RI9mSIb8zKZzchOWOR8",
+    authDomain: "undangan-zila.firebaseapp.com",
+    projectId: "undangan-zila",
+    storageBucket: "undangan-zila.firebasestorage.app",
+    messagingSenderId: "663200651385",
+    appId: "1:663200651385:web:26b9c700b32de7c27f1ca8"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-console.log("✅ Firebase initialized successfully");
-console.log("🔥 Firestore project:", firebaseConfig.projectId);
-console.log("📍 Firestore instance:", db);
 
 // GANTI URL BERIKUT DENGAN WEB APP URL HASIL DEPLOY APPS SCRIPT (jika tidak digunakan, abaikan)
 const SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZa2BeDatvUkt2PXDTzkAbX8QH3ItbjLdR99BIIBhgER-KU2-cYyla03mybuDCbFYj/exec";
@@ -372,13 +368,8 @@ function renderRsvpSummary() {
 
 async function loadRsvpSummaryFromServer() {
     try {
-        console.log("🔄 Loading RSVP summary from Firestore...");
-        
         const q = query(collection(db, "entries"), where("type", "==", "rsvp"));
-        console.log("📝 Query created for RSVP entries");
-        
         const snapshot = await getDocs(q);
-        console.log(`✅ RSVP query successful. Found ${snapshot.size} RSVP entries`);
         
         rsvpSummary.hadir = 0;
         rsvpSummary.belum = 0;
@@ -387,20 +378,14 @@ async function loadRsvpSummaryFromServer() {
         snapshot.forEach(doc => {
             const data = doc.data();
             const jumlah = parseInt(data.jumlah || 1, 10);
-            console.log(`- Entry: ${data.nama} | Status: ${data.status} | Jumlah: ${jumlah}`);
             
             if (data.status === "Insya Allah Hadir") rsvpSummary.hadir += jumlah;
             else if (data.status === "Belum Pasti") rsvpSummary.belum += jumlah;
             else if (data.status === "Maaf Tidak Bisa Hadir") rsvpSummary.tidak += jumlah;
         });
         
-        console.log(`📊 RSVP Summary - Hadir: ${rsvpSummary.hadir}, Belum: ${rsvpSummary.belum}, Tidak: ${rsvpSummary.tidak}`);
         renderRsvpSummary();
     } catch (err) {
-        console.error("❌ Gagal load RSVP summary:", err);
-        console.error("Error Code:", err.code);
-        console.error("Error Message:", err.message);
-        console.error("Full Error:", err);
         renderRsvpSummary();
     }
 }
@@ -440,7 +425,6 @@ document.getElementById("rsvpForm").addEventListener("submit", async function (e
 
         this.reset();
     } catch (err) {
-        console.error("❌ Gagal kirim RSVP:", err.message);
         statusMsg.textContent = "Gagal mengirim RSVP. Mohon coba lagi beberapa saat.";
     }
 });
@@ -493,17 +477,13 @@ function addGuestCard(item, prepend = false) {
 
 async function loadGuestbook() {
     try {
-        console.log("🔄 Loading guestbook from Firestore...");
-        
         // Query ALL entries ordered by createdAt (terbaru dulu)
         const qAllEntries = query(
             collection(db, "entries"),
             orderBy("createdAt", "desc")
         );
-        console.log("📝 Query created for all entries ordered by createdAt");
         
         const snapshot = await getDocs(qAllEntries);
-        console.log(`✅ Query successful. Total entries: ${snapshot.size}`);
         
         // Filter entries yang punya ucapan
         let allEntries = [];
@@ -512,7 +492,6 @@ async function loadGuestbook() {
             const data = doc.data();
             // Ambil semua yang punya field ucapan dan tidak kosong
             if (data.ucapan && data.ucapan.trim()) {
-                console.log(`- Guestbook entry: ${data.nama} (${data.type})`);
                 allEntries.push({
                     nama: data.nama || "Tamu",
                     hubungan: data.hubungan || "Tamu Undangan",
@@ -523,11 +502,9 @@ async function loadGuestbook() {
             }
         });
         
-        console.log(`📊 Total guestbook entries with ucapan: ${allEntries.length}`);
         guestListEl.innerHTML = "";
         
         if (!allEntries.length) {
-            console.log("ℹ️ No guestbook entries found, rendering empty message");
             renderGuestEmpty();
             return;
         }
@@ -542,10 +519,6 @@ async function loadGuestbook() {
         });
         
     } catch (err) {
-        console.error("❌ Gagal load guestbook:", err);
-        console.error("Error Code:", err.code);
-        console.error("Error Message:", err.message);
-        console.error("Full Error:", err);
         renderGuestEmpty();
     }
 }
@@ -595,7 +568,6 @@ if (guestFormEl) {
             this.reset();
 
         } catch (err) {
-            console.error("❌ Gagal kirim guestbook:", err.message);
             if (hint) {
                 hint.textContent = "Gagal mengirim ucapan. Mohon coba lagi.";
                 hint.style.opacity = "1";
@@ -673,7 +645,7 @@ if (btnShareNative) {
         try {
         await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
         } catch (err) {
-        console.log("Share dibatalkan / gagal:", err);
+        // Share dibatalkan / gagal
         }
     } else {
         // fallback copy
@@ -728,21 +700,15 @@ if (btnCopyLink) {
 
 // Inisialisasi data dari server setelah DOM siap dan page fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("📄 DOMContentLoaded triggered, attempting to load Firestore data...");
-    
     // Defer Firebase data loading to idle time
     if (typeof requestIdleCallback !== "undefined") {
-        console.log("⏳ Using requestIdleCallback to load data");
         requestIdleCallback(() => {
-            console.log("⚡ Idle callback executing: loading RSVP and guestbook");
             loadRsvpSummaryFromServer();
             loadGuestbook();
         });
     } else {
         // Fallback for browsers without requestIdleCallback
-        console.log("⏳ requestIdleCallback not available, using setTimeout 1000ms fallback");
         setTimeout(() => {
-            console.log("⚡ Timeout callback executing: loading RSVP and guestbook");
             loadRsvpSummaryFromServer();
             loadGuestbook();
         }, 1000);

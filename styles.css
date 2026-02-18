@@ -2211,6 +2211,208 @@ body.unlocked #page {
 }
 .share-hint::before { content: "✨"; }
 
+/* LIVESTREAM */
+.livestream-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 1.5rem 1.3rem 1.5rem;
+    border: 2px solid rgba(196,154,108,0.4);
+    background: linear-gradient(135deg, #fff8f0 0%, #fef7ed 25%, #fdf2e8 50%, #fef7ed 75%, #fff8f0 100%);
+    box-shadow:
+        0 20px 40px rgba(196,154,108,0.15),
+        0 8px 16px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.livestream-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+        0 32px 64px rgba(196,154,108,0.25),
+        0 16px 32px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+    border-color: rgba(196,154,108,0.6);
+}
+.livestream-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,215,180,0.4), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255,235,200,0.3), transparent 50%),
+        linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+    opacity: 0.8;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.livestream-card:hover::before {
+    opacity: 1;
+}
+.livestream-card-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.livestream-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+.livestream-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffffff 0%, #fefcfb 50%, #fdf9f5 100%);
+    box-shadow:
+        0 12px 28px rgba(0,0,0,0.2),
+        0 6px 12px rgba(196,154,108,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.livestream-icon::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(from 0deg, transparent, rgba(196,154,108,0.1), transparent);
+    animation: rotate 4s linear infinite;
+}
+.livestream-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow:
+        0 16px 32px rgba(0,0,0,0.25),
+        0 8px 16px rgba(196,154,108,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+}
+.livestream-title {
+    font-family: "Cinzel", serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #3a2a1f;
+    margin-bottom: 0.2rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    letter-spacing: 0.5px;
+}
+.livestream-sub {
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c49a6c;
+    font-weight: 500;
+    opacity: 0.9;
+}
+.livestream-text {
+    font-size: 0.9rem;
+    color: #5a4634;
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+    text-align: justify;
+}
+.livestream-links {
+    margin-bottom: 1rem;
+}
+.livestream-link-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(254,247,237,0.95) 100%);
+    border-radius: 16px;
+    border: 2px solid rgba(196,154,108,0.3);
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+.livestream-link-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(196,154,108,0.1), transparent);
+    transition: left 0.5s ease;
+}
+.livestream-link-item:hover::before {
+    left: 100%;
+}
+.livestream-link-item:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 28px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    border-color: rgba(196,154,108,0.5);
+}
+.livestream-link-item:last-child {
+    margin-bottom: 0;
+}
+.livestream-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4a331f;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+.livestream-value {
+    font-family: "Nunito", monospace;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #3b2a17;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(254,250,243,0.98) 100%);
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(196,154,108,0.4);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+.livestream-value:hover {
+    background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(254,250,243,1) 100%);
+    border-color: rgba(196,154,108,0.6);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+}
+.livestream-footer {
+    margin-top: 1rem;
+    text-align: center;
+    position: relative;
+}
+.livestream-hint {
+    font-size: 0.8rem;
+    color: #8a6b48;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(255,255,255,0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(196,154,108,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.livestream-hint::before {
+    content: "💡";
+    font-size: 1rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* FOOTER */
 footer {
     padding: 2.5rem 1rem 2.1rem;
